@@ -1,7 +1,8 @@
 import Player from "./player";
-import { calculateTheta } from './utils';
+import { calculateTheta, randomEdgePos } from './utils';
 import Cursor from "./cursor";
 import Laser from "./laser";
+import Enemy from './enemy';
 
 class Game {
     constructor(canvas, ctx){
@@ -14,6 +15,8 @@ class Game {
         this.cursor = new Cursor();
         this.score = 0;
         this.lasers = null;
+        this.enemies = [];
+        this.eid = 1;
     }
 
     start(){
@@ -26,6 +29,9 @@ class Game {
         this.canvas.addEventListener("click", e => {
             const laser = new Laser(this.mid, calculateTheta(this.cursor));
             this.laser = laser;
+        });
+        setTimeout(() => {
+            enemies.push(new Enemy())
         });
     }
 

@@ -8,12 +8,16 @@ class Laser {
     }
 
     draw(ctx){
+        ctx.save();
         ctx.beginPath();
         ctx.moveTo(this.pos.x, this.pos.y);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#11e023";
         const diffY = Math.sin(this.direc) * this.len;
         const diffX = Math.cos(this.direc) * this.len;
         ctx.lineTo(this.pos.x + diffX, this.pos.y + diffY);
         ctx.stroke();
+        ctx.restore();
     }
 }
 
