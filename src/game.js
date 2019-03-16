@@ -16,7 +16,7 @@ class Game {
         this.score = 0;
         this.lasers = null;
         this.enemies = [];
-        this.eid = 1;
+        this.eid = 1; //enemy id, sequential
     }
 
     start(){
@@ -30,17 +30,19 @@ class Game {
             const laser = new Laser(this.mid, calculateTheta(this.cursor));
             this.laser = laser;
         });
-        setTimeout(() => {
-            enemies.push(new Enemy())
-        });
+        setInterval(() => {
+            this.enemies.push(new Enemy(this.eid, this.canvas.width, this.canvas.height, 12));
+            this.eid++;
+        }, 1000);
     }
 
     render(){
         this.ctx.clearRect(0, 0, this.width, this.height);
         const rot = calculateTheta(this.cursor) + (Math.PI / 2);
         this.player.draw(this.ctx, rot);
-        this.cursor.draw(this.ctx, this.mid);
         if(this.laser) this.laser.draw(this.ctx);
+        this.cursor.draw(this.ctx, this.mid);
+        this.enemies.forEach(enemy => enemy.draw(this.ctx));
     }
 
     tick(){

@@ -1,9 +1,10 @@
 import {randomEdgePos} from './utils';
 
 class Enemy {
-  constructor(id, vec){
-    this.pos = randomEdgePos();
-    this.vec = vec; 
+  constructor(id, gameWidth, gameHeight, vel){
+    this.id = id;
+    this.pos = randomEdgePos(gameWidth, gameHeight);
+    this.vec = [0, 0];
   }
 
   move(){
@@ -14,7 +15,7 @@ class Enemy {
 
   draw(ctx){
     ctx.beginPath();
-    ctx.arc(pos[0], pos[1], 10, 0, 2 * Math.PI);
+    ctx.arc(this.pos[0], this.pos[1], 10, 0, 2 * Math.PI);
     ctx.fill();
   }
 }
