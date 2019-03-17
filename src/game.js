@@ -9,7 +9,7 @@ class Game {
         this.canvas = canvas;
         this.ctx = ctx;
         this.dims = [canvas.width, canvas.height];
-        this.mid = [Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)];
+        this.mid = [canvas.width / 2, canvas.height / 2];
         this.player = new Player(this.mid);
         this.cursor = new Cursor();
         this.score = 0;
@@ -40,7 +40,7 @@ class Game {
         this.player.draw(this.ctx, rot);
         if(this.laser) this.laser.draw(this.ctx);
         this.cursor.draw(this.ctx, this.mid);
-        this.enemies.forEach(enemy => enemy.draw(this.ctx));
+        this.enemies.forEach(enemy => enemy.draw(this.ctx, this.mid));
     }
 
     tick(){
@@ -48,6 +48,7 @@ class Game {
             this.laser.grow();
             if(this.laser.is_finished()) this.laser = null;
         }
+        this.enemies.forEach(enemy => enemy.move()); 
         this.render();
     }
 }

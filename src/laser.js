@@ -3,7 +3,7 @@ class Laser {
     constructor(pos, theta){
         this.pos = pos;
         this.duration = 10;
-        this.vec = calculateVector(pos, theta, 100);
+        this.vec = calculateVector(theta, 100);
     }
 
     is_finished(){
@@ -11,7 +11,7 @@ class Laser {
     }
 
     grow(){
-        this.vec.map(component => component * 2);
+        this.vec = this.vec.map(component => component * 2);
     }
 
     draw(ctx){
@@ -20,7 +20,7 @@ class Laser {
         ctx.moveTo(this.pos[0], this.pos[1]);
         ctx.lineWidth = 3;
         ctx.strokeStyle = "#11e023";
-        ctx.lineTo(this.vec[0], this.vec[1]);
+        ctx.lineTo(this.pos[0] + this.vec[0], this.pos[1] + this.vec[1]);
         ctx.stroke();
         ctx.restore();
     }

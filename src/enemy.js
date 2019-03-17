@@ -1,10 +1,11 @@
-import {randomEdgePos} from './utils';
+import {randomEdgePos, calculateVector, calculateTheta, relPosition} from './utils';
 
 class Enemy {
-  constructor(id, dimensions, vel){
+  constructor(id, dims, vel){
     this.id = id;
-    this.pos = randomEdgePos(dimensions[0], dimensions[1]);
-    this.vec = [0, 0];
+    this.pos = relPosition([dims[0] / 2, dims[1] / 2], randomEdgePos(dims[0], dims[1]));
+    const theta = calculateTheta(this.pos);
+    this.vec = calculateVector(theta, -2);
   }
 
   move(){
@@ -13,10 +14,13 @@ class Enemy {
   }
 
 
-  draw(ctx){
+  draw(ctx, mid){
+    ctx.save();
+    ctx.translate(mid[0], mid[1]);
     ctx.beginPath();
     ctx.arc(this.pos[0], this.pos[1], 10, 0, 2 * Math.PI);
     ctx.fill();
+    ctx.restore();
   }
 }
 

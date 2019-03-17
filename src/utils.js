@@ -18,11 +18,15 @@ export const randomEdgePos = (width, height) => {
     }
 };
 
+export const relPosition = (mid, pos) => { // make coordinates relative to midpoint
+    return [pos[0] - mid[0], pos[1] - mid[1]];
+};
+
 export const randInt = max => {
     return Math.floor(Math.random() * max);
 };
 
-export const calculateVector = (pos, theta, vel) => {
-   return [pos[0] + Math.cos(theta) * vel, pos[1] + Math.sin(theta) * vel];
+export const calculateVector = (theta, vel) => {
+   return [Math.cos(theta) * vel, Math.sin(theta) * vel];
 };
 
