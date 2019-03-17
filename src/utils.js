@@ -1,5 +1,5 @@
-export const calculateTheta = ({x, y}) => {
-    return Math.atan2(y, x);
+export const calculateTheta = (pos) => {
+    return Math.atan2(pos[1], pos[0]);
 };
 
 
@@ -21,3 +21,8 @@ export const randomEdgePos = (width, height) => {
 export const randInt = max => {
     return Math.floor(Math.random() * max);
 };
+
+export const calculateVector = (pos, theta, vel) => {
+   return [pos[0] + Math.cos(theta) * vel, pos[1] + Math.sin(theta) * vel];
+};
+

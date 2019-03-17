@@ -1,9 +1,9 @@
 import {randomEdgePos} from './utils';
 
 class Enemy {
-  constructor(id, gameWidth, gameHeight, vel){
+  constructor(id, dimensions, vel){
     this.id = id;
-    this.pos = randomEdgePos(gameWidth, gameHeight);
+    this.pos = randomEdgePos(dimensions[0], dimensions[1]);
     this.vec = [0, 0];
   }
 

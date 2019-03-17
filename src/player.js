@@ -5,7 +5,7 @@ class Player {
     draw(ctx, rot){
         ctx.fillstyle = "#dee4ed";
         ctx.save();
-        ctx.translate(this.pos.x, this.pos.y); 
+        ctx.translate(this.pos[0], this.pos[1]); 
         ctx.rotate(rot);
         ctx.beginPath();
         ctx.lineTo(-10, 4);
