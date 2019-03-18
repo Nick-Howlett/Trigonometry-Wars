@@ -1,5 +1,5 @@
 import Player from "./player";
-import { calculateTheta } from './utils';
+import { calculateTheta, lineCircleCollision} from './utils';
 import Cursor from "./cursor";
 import Laser from "./laser";
 import Enemy from './enemy';
@@ -19,19 +19,32 @@ class Game {
     }
 
     start(){
-        setInterval(this.tick.bind(this), 20);
+        this.tickInterval = setInterval(this.tick.bind(this), 20);
         this.canvas.addEventListener("mousemove", e => { // from https://codepen.io/chrisjaime/pen/lcEpn
             const rect = this.canvas.getBoundingClientRect();
             this.cursor.updatePos((e.clientX - rect.left) - (this.canvas.width / 2), (e.clientY - rect.top) - (this.canvas.height / 2)); //position relative to player position.
         });
-        this.canvas.addEventListener("click", e => {
-            const laser = new Laser(this.mid, calculateTheta(this.cursor.pos));
-            this.laser = laser;
+        this.clickListener = this.canvas.addEventListener("click", e => {
+            this.laser  = new Laser(this.mid, calculateTheta(this.cursor.pos));
         });
-        setInterval(() => {
+        this.spawnInterval = setInterval(() => {
             this.enemies.push(new Enemy(this.eid, this.dims, 12));
             this.eid++;
-        }, 1000);
+        }, 5000);
+    }
+
+    gameOver(){
+        clearInterval(this.tickInterval);
+        clearInterval(this.spawnInterval);
+    }
+
+    check_collisions(){
+        this.enemies.forEach(enemy => {
+            if(this.laser && lineCircleCollision([this.laser.pos, this.laser.vec], enemy.pos, enemy.radius)){
+                delete this.enemies[this.enemies.indexOf(enemy)];
+            }
+            if(this.player.is_collided(enemy)) this.gameOver();
+        });
     }
 
     render(){
@@ -48,7 +61,8 @@ class Game {
             this.laser.grow();
             if(this.laser.is_finished()) this.laser = null;
         }
-        this.enemies.forEach(enemy => enemy.move()); 
+        this.enemies.forEach(enemy => enemy.move());
+        this.check_collisions();
         this.render();
     }
 }
