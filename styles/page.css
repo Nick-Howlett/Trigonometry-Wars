@@ -1,5 +1,8 @@
 #game-canvas{
     border: 1px solid black;
+}
+
+#game-canvas.active{
     cursor: none;
 }
 
@@ -8,4 +11,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+
+.overlay{
+    margin: 0 auto;
+    position: absolute;
+    top: 241px;
+    padding: 40px;  
+    background: white;
+    border: 1px solid grey;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.hidden{
+    display: none;
 }

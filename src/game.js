@@ -5,17 +5,16 @@ import Laser from "./laser";
 import Enemy from './enemy';
 
 class Game {
-    constructor(canvas, ctx){
+    constructor(canvas, ctx, finishOverlay){
+        this.finishOverlay = finishOverlay;
         this.canvas = canvas;
         this.ctx = ctx;
         this.dims = [canvas.width, canvas.height];
         this.mid = [canvas.width / 2, canvas.height / 2];
         this.player = new Player(this.mid);
         this.cursor = new Cursor();
-        this.score = 0;
         this.laser = null;
         this.enemies = [];
-        this.eid = 1; //enemy id, sequential
     }
 
     start(){
@@ -29,13 +28,14 @@ class Game {
         });
         this.spawnInterval = setInterval(() => {
             this.enemies.push(new Enemy(this.eid, this.dims, 12));
-            this.eid++;
         }, 5000);
     }
 
     gameOver(){
         clearInterval(this.tickInterval);
         clearInterval(this.spawnInterval);
+        this.canvas.className = "inactive";
+        this.finishOverlay.className = "overlay";
     }
 
     check_collisions(){
