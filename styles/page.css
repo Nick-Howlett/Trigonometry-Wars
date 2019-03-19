@@ -19,7 +19,7 @@
     margin: 0 auto;
     position: absolute;
     top: 241px;
-    padding: 40px;  
+    padding: 20px 40px;  
     background: white;
     border: 1px solid grey;
     border-radius: 4px;
@@ -27,6 +27,11 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
+}
+
+#score-overlay{
+    position: absolute;
+    top: 20px;    
 }
 
 .hidden{
