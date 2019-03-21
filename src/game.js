@@ -38,7 +38,8 @@ class Game {
         clearInterval(this.spawnInterval);
         this.canvas.className = "inactive";
         this.finishOverlay.className = "overlay";
-        this.finishOverlay.innerHTML += `Your Score is: ${this.score}`;
+        const score = document.createTextNode(`Your Score is: ${this.score}`);
+        this.finishOverlay.appendChild(score);
     }
 
 
@@ -66,6 +67,13 @@ class Game {
     tick(){
         if(this.laser){
             this.laser.grow();
+            const x = Math.abs(this.laser.vec[0]);
+            const y = Math.abs(this.laser.vec[1]);
+            const horizBound =  this.dims[0] / 2;
+            const vertBound = this.dims[1] / 2;
+
+            if(x > horizBound) console.log(x - horizBound);
+            if(y > vertBound) console.log(y - vertBound);
             if(this.laser.is_finished()) this.laser = null;
         }
         this.enemies.forEach(enemy => enemy.move());

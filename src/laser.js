@@ -12,6 +12,7 @@ class Laser {
 
     grow(){
         this.vec = this.vec.map(component => component * 2);
+        this.duration--;
     }
 
     draw(ctx){
