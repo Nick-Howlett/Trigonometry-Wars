@@ -46,9 +46,15 @@ class Game {
 
     check_collisions(){
         this.enemies.forEach(enemy => {
-            if(this.laser && lineCircleCollision([this.laser.pos, this.laser.vec], enemy.pos, enemy.radius)){
-                delete this.enemies[this.enemies.indexOf(enemy)];
-                this.score += 100;
+            if(this.laser){
+                let pos = this.laser.pos;
+                this.laser.vec.forEach(vector => {
+                    if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
+                        delete this.enemies[this.enemies.indexOf(enemy)];
+                        this.score += 100;
+                    }
+                    pos = vector;
+                });
             }
             if(this.player.is_collided(enemy)) this.gameOver();
         });
@@ -67,13 +73,19 @@ class Game {
     tick(){
         if(this.laser){
             this.laser.grow();
-            const x = Math.abs(this.laser.vec[0]);
-            const y = Math.abs(this.laser.vec[1]);
+            const current = this.laser.vec[this.laser.vec.length - 1];
+            const x = Math.abs(current[0]);
+            const y = Math.abs(current[1]);
             const horizBound =  this.dims[0] / 2;
             const vertBound = this.dims[1] / 2;
-
-            if(x > horizBound) console.log(x - horizBound);
-            if(y > vertBound) console.log(y - vertBound);
+            if(x > horizBound) {
+                current[0] -= (x - horizBound);
+                this.laser.bounceX();
+            }
+            if(y > vertBound){
+                current[1] -= (y - vertBound);
+                this.laser.bounceY();
+            }
             if(this.laser.is_finished()) this.laser = null;
         }
         this.enemies.forEach(enemy => enemy.move());
