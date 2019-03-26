@@ -6,7 +6,7 @@ class Enemy {
     this.radius = 10;
     this.pos = relPosition([dims[0] / 2, dims[1] / 2], randomEdgePos(dims[0], dims[1]));
     const theta = calculateTheta(this.pos);
-    this.vec = calculateVector(theta, -4);
+    this.vec = calculateVector(theta, -2);
   }
 
   move(){

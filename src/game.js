@@ -26,7 +26,7 @@ class Game {
             this.cursor.updatePos((e.clientX - rect.left) - (this.canvas.width / 2), (e.clientY - rect.top) - (this.canvas.height / 2)); //position relative to player position.
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
-            this.laser  = new Laser(this.mid, calculateTheta(this.cursor.pos));
+            this.laser = new Laser(this.mid, calculateTheta(this.cursor.pos));
         });
         this.spawnInterval = setInterval(() => {
             this.enemies.push(new Enemy(this.eid, this.dims, 20));
