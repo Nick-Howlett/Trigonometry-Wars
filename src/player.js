@@ -1,8 +1,8 @@
-import { lineCircleCollision } from './utils';
+import MovingObject from './moving-object';
 
-class Player {
+class Player extends MovingObject{
     constructor(pos){
-        this.pos = pos;
+        super(pos, vel);
         this.lines = [[-10, 4], [0, -22], [10, 4], [0, 0]];
     }
 
@@ -12,14 +12,10 @@ class Player {
         if(dist < maxDist){
             return true;
         }
-        // const lines = [[0, 0], ...this.lines];
-        // for(let i = 0; i < lines.length - 1; i++){
-        //     if(lineCircleCollision([lines[i], lines[i + 1]], enemy.pos, enemy.radius)){
-        //         return true;
-        //     }
-        // }
         return false;
     }
+
+    
     draw(ctx, rot){
         ctx.fillstyle = "#dee4ed";
         ctx.save();
