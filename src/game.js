@@ -12,7 +12,7 @@ class Game {
         this.ctx = ctx;
         this.dims = [canvas.width, canvas.height];
         this.mid = [canvas.width / 2, canvas.height / 2];
-        this.player = new Player(this.mid);
+        this.player = new Player(this.mid, 0, 0);
         this.cursor = new Cursor();
         this.score = 0;
         this.laser = null;
@@ -29,8 +29,11 @@ class Game {
             this.laser = new Laser(this.mid, calculateTheta(this.cursor.pos));
         });
         this.spawnInterval = setInterval(() => {
-            this.enemies.push(new Enemy(this.eid, this.dims, 20));
+            this.enemies.push(new Enemy(this.eid, this.dims, -2));
         }, 1000);
+        document.addEventListener("keydown", e => {
+            if(e.key === "w") this.player.accelerate();
+        });
     }
 
     gameOver(){
@@ -63,7 +66,7 @@ class Game {
     render(){
         this.scoreOverlay.innerHTML = `${this.score}`;
         this.ctx.clearRect(0, 0, this.dims[0], this.dims[1]);
-        const rot = calculateTheta(this.cursor.pos) + (Math.PI / 2);
+        const rot = ;
         this.player.draw(this.ctx, rot);
         if(this.laser) this.laser.draw(this.ctx);
         this.cursor.draw(this.ctx, this.mid);
@@ -88,6 +91,8 @@ class Game {
             }
             if(this.laser.is_finished()) this.laser = null;
         }
+        this.player.rotate(calculateTheta(this.cursor.pos) + (Math.PI / 2));
+        this.player.move();
         this.enemies.forEach(enemy => enemy.move());
         this.check_collisions();
         this.score++;

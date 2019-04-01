@@ -1,15 +1,15 @@
-import {randomEdgePos, calculateVector, calculateTheta, relPosition} from './utils';
+import {randomEdgePos, calculateTheta, relPosition} from './utils';
 import MovingObject from "./moving-object";
 
 class Enemy extends MovingObject{
-  constructor(id, dims){
+  constructor(id, dims, vel){
     const pos = relPosition([dims[0] / 2, dims[1] / 2], randomEdgePos(dims[0], dims[1]));
-    const theta = calculateTheta(this.pos);
-    const vel = calculateVector(theta, -2); 
-    super(pos, vel);
+    super(pos, vel, calculateTheta(pos));
     this.id = id;
     this.radius = 10;
   }
+
+  
 
   draw(ctx, mid){
     ctx.save(); 
