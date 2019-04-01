@@ -1,5 +1,5 @@
 import Player from "./player";
-import { calculateTheta, lineCircleCollision} from './utils';
+import { calculateTheta, lineCircleCollision, randomEdgePos} from './utils';
 import Cursor from "./cursor";
 import Laser from "./laser";
 import Enemy from './enemy';
@@ -16,20 +16,21 @@ class Game {
         this.cursor = new Cursor();
         this.score = 0;
         this.laser = null;
-        this.enemies = [];
+        this.entities = [this.player];
     }
 
     start(){
         this.tickInterval = setInterval(this.tick.bind(this), 20);
         this.canvas.addEventListener("mousemove", e => { // from https://codepen.io/chrisjaime/pen/lcEpn
             const rect = this.canvas.getBoundingClientRect();
-            this.cursor.updatePos((e.clientX - rect.left) - (this.canvas.width / 2), (e.clientY - rect.top) - (this.canvas.height / 2)); //position relative to player position.
+            this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
             this.laser = new Laser(this.mid, calculateTheta(this.cursor.pos));
         });
         this.spawnInterval = setInterval(() => {
-            this.enemies.push(new Enemy(this.eid, this.dims, -2));
+            const startPos = randomEdgePos(...this.dims);
+            this.entities.push(new Enemy(this.eid, startPos, -2, calculateTheta(this.player.pos, startPos)));
         }, 1000);
         document.addEventListener("keydown", e => {
             if(e.key === "w") this.player.accelerate();
@@ -48,29 +49,28 @@ class Game {
 
 
     check_collisions(){
-        this.enemies.forEach(enemy => {
+        for(let i = 1; i < this.entities.length; i++){ //start loop without player
+            const enemy = this.entities[i];
             if(this.laser){
                 let pos = this.laser.pos;
                 this.laser.vec.forEach(vector => {
                     if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
-                        delete this.enemies[this.enemies.indexOf(enemy)];
+                        delete this.entities[i];
                         this.score += 100;
                     }
                     pos = vector;
                 });
             }
             if(this.player.is_collided(enemy)) this.gameOver();
-        });
+        }
     }
 
     render(){
         this.scoreOverlay.innerHTML = `${this.score}`;
         this.ctx.clearRect(0, 0, this.dims[0], this.dims[1]);
-        const rot = ;
-        this.player.draw(this.ctx, rot);
         if(this.laser) this.laser.draw(this.ctx);
-        this.cursor.draw(this.ctx, this.mid);
-        this.enemies.forEach(enemy => enemy.draw(this.ctx, this.mid));
+        this.cursor.draw(this.ctx);
+        this.entities.forEach(entity => entity.draw(this.ctx));
     }
 
     tick(){
@@ -91,9 +91,10 @@ class Game {
             }
             if(this.laser.is_finished()) this.laser = null;
         }
-        this.player.rotate(calculateTheta(this.cursor.pos) + (Math.PI / 2));
-        this.player.move();
-        this.enemies.forEach(enemy => enemy.move());
+        this.entities.forEach(entity => {
+            if(entity === this.player) entity.rotate(calculateTheta(this.player.pos, this.cursor.pos) - Math.PI/2);
+            entity.move();
+        });
         this.check_collisions();
         this.score++;
         this.render();

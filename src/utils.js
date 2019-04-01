@@ -1,5 +1,7 @@
-export const calculateTheta = (pos) => {
-    return Math.atan2(pos[1], pos[0]);
+export const calculateTheta = (pos1, pos2) => {
+    const diffX = pos1[0] - pos2[0];
+    const diffY = pos1[1] - pos2[1];
+    return Math.atan2(diffY, diffX);
 };
 
 

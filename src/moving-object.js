@@ -15,7 +15,7 @@ class MovingObject {
       this.vel = 0;
   }
 
-  rotate(rot){
+  rotate(rot){  
     this.direc = rot;
   }
 

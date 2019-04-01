@@ -8,7 +8,9 @@ class Player extends MovingObject{
 
     is_collided(enemy){
         const maxDist = enemy.radius + 10; //max distance at which the two are not colliding, enemy's radius and cricle of radius 20 around player.
-        const dist = Math.sqrt(enemy.pos[0] * enemy.pos[0] + enemy.pos[1] * enemy.pos[1]);
+        const diffX = this.pos[0] - enemy.pos[0];
+        const diffY = this.pos[1] - enemy.pos[1];
+        const dist = Math.sqrt(diffX**2 + diffY**2);
         if(dist < maxDist){
             return true;
         }

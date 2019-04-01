@@ -7,9 +7,9 @@ class Cursor {
         this.pos = [x, y];
     }
 
-    draw(ctx, mid){
+    draw(ctx){
         ctx.save();
-        ctx.translate(mid[0] + this.pos[0], mid[1] + this.pos[1]);
+        ctx.translate(this.pos[0], this.pos[1]);
         ctx.beginPath();
         ctx.lineTo(0, -5);
         ctx.lineTo(0, 0);
