@@ -1,10 +1,11 @@
 import {calculateVector} from './utils';
+
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
         this.duration = 10;
         this.theta = theta;
-        this.vec = [calculateVector(theta, 100)];
+        this.vec = [calculateVector(theta, -100)];
     }
 
     is_finished(){

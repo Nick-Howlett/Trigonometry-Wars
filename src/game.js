@@ -1,5 +1,6 @@
 import Player from "./player";
-import { calculateTheta, lineCircleCollision, randomEdgePos} from './utils';
+import { calculateTheta, randomEdgePos} from './utils';
+import { lineCircleCollision, edgeCollision} from './collisions'; 
 import Cursor from "./cursor";
 import Laser from "./laser";
 import Enemy from './enemy';
@@ -24,16 +25,17 @@ class Game {
         this.canvas.addEventListener("mousemove", e => { // from https://codepen.io/chrisjaime/pen/lcEpn
             const rect = this.canvas.getBoundingClientRect();
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
+            console.log(this.cursor.pos);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
-            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos) - Math.PI / 2);
+            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos));
         });
         this.spawnInterval = setInterval(() => {
             const startPos = randomEdgePos(...this.dims);
             this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(startPos, this.player.pos)));
         }, 1000);
         document.addEventListener("keydown", e => {
-            if(e.key === "w") this.player.accelerate(4);
+            if(e.key === "w") this.player.accelerate(-4);
         });
     }
 
@@ -45,7 +47,6 @@ class Game {
         const score = document.createTextNode(`Your Score is: ${this.score}`);
         this.finishOverlay.appendChild(score);
     }
-
 
 
     check_collisions(){
@@ -80,7 +81,7 @@ class Game {
         }
         this.entities.forEach(entity => {
             if(entity === this.player){
-                entity.rotate(calculateTheta(this.player.pos, this.cursor.pos) - Math.PI / 2);
+                entity.rotate(calculateTheta(this.player.pos, this.cursor.pos));
             } else {
                 entity.rotate(calculateTheta(this.player.pos, entity.pos));
             }
