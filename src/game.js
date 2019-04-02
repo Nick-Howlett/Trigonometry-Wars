@@ -26,11 +26,11 @@ class Game {
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
-            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos));
+            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos) - Math.PI / 2);
         });
         this.spawnInterval = setInterval(() => {
             const startPos = randomEdgePos(...this.dims);
-            this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(this.player.pos, startPos)));
+            this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(startPos, this.player.pos)));
         }, 1000);
         document.addEventListener("keydown", e => {
             if(e.key === "w") this.player.accelerate(4);
@@ -50,6 +50,7 @@ class Game {
 
     check_collisions(){
         this.entities.slice(1).forEach(enemy => {
+            console.log(enemy.pos)
             if(this.laser){
             let pos = this.laser.pos;
             this.laser.vec.forEach(vector => {
@@ -75,23 +76,14 @@ class Game {
     tick(){
         if(this.laser){
             this.laser.grow();
-            const current = this.laser.vec[this.laser.vec.length - 1];
-            const x = Math.abs(current[0]);
-            const y = Math.abs(current[1]);
-            const horizBound =  this.dims[0] / 2;
-            const vertBound = this.dims[1] / 2;
-            if(x > horizBound) {
-                current[0] -= (x - horizBound);
-                this.laser.bounceX();
-            }
-            if(y > vertBound){
-                current[1] -= (y - vertBound);
-                this.laser.bounceY();
-            }
             if(this.laser.is_finished()) this.laser = null;
         }
         this.entities.forEach(entity => {
-            if(entity === this.player) entity.rotate(calculateTheta(this.player.pos, this.cursor.pos) - Math.PI/2);
+            if(entity === this.player){
+                entity.rotate(calculateTheta(this.player.pos, this.cursor.pos) - Math.PI / 2);
+            } else {
+                entity.rotate(calculateTheta(this.player.pos, entity.pos));
+            }
             entity.move();
         });
         this.player.decelerate();   

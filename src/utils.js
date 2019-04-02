@@ -29,7 +29,8 @@ export const randInt = max => {
 };
 
 export const calculateVector = (theta, vel) => {
-   return [Math.sin(theta) * vel, -Math.cos(theta) * vel, ];
+    return [Math.cos(theta) * vel, Math.sin(theta) * vel]
+//    return [Math.sin(theta) * vel, -Math.cos(theta) * vel];
 };
 
 export const dotProduct = (vec1, vec2) => { 
@@ -46,12 +47,12 @@ export const dotProduct = (vec1, vec2) => {
 
 //https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
 export const lineCircleCollision = (line, center, radius) => { //line is of the form [[x1, y1], [x2, y2]]
-    const linePos = relPosition(line[0], line[0]);
-    const lineVec = [linePos[0] - line[1][0], linePos[1] - line[1][1]];
-    const posDiff = [linePos[0] - center[0], linePos[1] - center[1]];
+    const lineVec = [line[1][0] - line[0][0], line[1][1] - line[0][1]];
+    const posDiff = [line[0][0] - center[0], line[0][1] - center[1]];
     const a = dotProduct(lineVec, lineVec);
     const b = 2 * dotProduct(posDiff, lineVec);
     const c = dotProduct(posDiff, posDiff) - radius * radius;
     const discrim = (b * b) - (4 * a * c);
+
     return discrim > 0; 
 };
