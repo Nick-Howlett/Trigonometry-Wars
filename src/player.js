@@ -24,7 +24,7 @@ class Player extends MovingObject{
     draw(ctx){
         ctx.fillstyle = "#dee4ed";
         ctx.save();
-        ctx.translate(this.pos[0], this.pos[1]); 
+        ctx.translate(this.pos[0], this.pos[1]);
         ctx.rotate(this.direc);
         ctx.beginPath();
         this.lines.forEach(pos => {

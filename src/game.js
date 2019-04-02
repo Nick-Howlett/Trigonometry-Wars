@@ -26,14 +26,14 @@ class Game {
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
-            this.laser = new Laser(this.mid, calculateTheta(this.cursor.pos));
+            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos));
         });
         this.spawnInterval = setInterval(() => {
             const startPos = randomEdgePos(...this.dims);
-            this.entities.push(new Enemy(this.eid, startPos, -2, calculateTheta(this.player.pos, startPos)));
+            this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(this.player.pos, startPos)));
         }, 1000);
         document.addEventListener("keydown", e => {
-            if(e.key === "w") this.player.accelerate();
+            if(e.key === "w") this.player.accelerate(4);
         });
     }
 
@@ -95,6 +95,7 @@ class Game {
             if(entity === this.player) entity.rotate(calculateTheta(this.player.pos, this.cursor.pos) - Math.PI/2);
             entity.move();
         });
+        this.player.decelerate();   
         this.check_collisions();
         this.score++;
         this.render();

@@ -29,7 +29,7 @@ export const randInt = max => {
 };
 
 export const calculateVector = (theta, vel) => {
-   return [Math.cos(theta) * vel, Math.sin(theta) * vel];
+   return [Math.sin(theta) * vel, -Math.cos(theta) * vel, ];
 };
 
 export const dotProduct = (vec1, vec2) => { 
