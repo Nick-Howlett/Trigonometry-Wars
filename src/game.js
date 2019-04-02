@@ -49,20 +49,19 @@ class Game {
 
 
     check_collisions(){
-        for(let i = 1; i < this.entities.length; i++){ //start loop without player
-            const enemy = this.entities[i];
+        this.entities.slice(1).forEach(enemy => {
             if(this.laser){
-                let pos = this.laser.pos;
-                this.laser.vec.forEach(vector => {
-                    if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
-                        delete this.entities[i];
-                        this.score += 100;
-                    }
+            let pos = this.laser.pos;
+            this.laser.vec.forEach(vector => {
+                if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
+                    delete this.entities[this.entities.indexOf(enemy)];
+                    this.score += 100;
+                }
                     pos = vector;
                 });
             }
             if(this.player.is_collided(enemy)) this.gameOver();
-        }
+        });
     }
 
     render(){
