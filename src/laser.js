@@ -3,13 +3,18 @@ import {calculateVector} from './utils';
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
-        this.duration = 10;
+        this.duration = 6;
         this.theta = theta;
-        this.vec = [calculateVector(theta, -100)];
+        const vector = calculateVector(theta, -200);
+        this.vec = [[this.pos[0] + vector[0], this.pos[1] + vector[1]]];
     }
 
     is_finished(){
         return this.duration === 0;
+    }
+
+    update_duration(){
+        this.duration--;
     }
 
     bounceX(){
@@ -22,9 +27,12 @@ class Laser {
         this.vec.push([current[0], -current[1]]);
     }
 
-    grow(){
-        this.vec[this.vec.length - 1] = this.vec[this.vec.length - 1].map(component => component * 2);
-        this.duration--;
+    grow(factor){
+        const prev = this.vec.length === 1 ? this.pos : this.vec[this.vec.length - 2];
+        const current = this.vec[this.vec.length - 1];
+        for(let i = 0; i < current.length; i++){
+            current[i] = prev[i] + (current[i] - prev[i]) * factor;
+        }
     }
 
     draw(ctx){
@@ -34,7 +42,7 @@ class Laser {
         ctx.lineWidth = 3;
         ctx.strokeStyle = "#11e023";
         this.vec.forEach(vector => {
-            ctx.lineTo(this.pos[0] + vector[0], this.pos[1] + vector[1]);
+            ctx.lineTo(vector[0], vector[1]);
         });
         ctx.stroke();
         ctx.restore();
