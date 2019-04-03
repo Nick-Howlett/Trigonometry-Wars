@@ -1,4 +1,6 @@
 import MovingObject from './moving-object';
+import Vector from './vector';
+
 
 class Player extends MovingObject{
     constructor(pos, vel, direc){
@@ -8,23 +10,18 @@ class Player extends MovingObject{
 
     is_collided(enemy){
         const maxDist = enemy.radius + 10; //max distance at which the two are not colliding, enemy's radius and cricle of radius 20 around player.
-        const diffX = this.pos[0] - enemy.pos[0];
-        const diffY = this.pos[1] - enemy.pos[1];
-        const dist = Math.sqrt(diffX**2 + diffY**2);
-        if(dist < maxDist){
+        const distVec = new Vector(this.pos, enemy.pos);
+        if(distVec.magnitude() < maxDist){
             return true;
         }
         return false;
     }
 
 
-
-
-    
     draw(ctx){
         ctx.fillstyle = "#dee4ed";
         ctx.save();
-        ctx.translate(this.pos[0], this.pos[1]);
+        ctx.translate(this.pos.x, this.pos.y);
         ctx.rotate(this.direc - Math.PI / 2);
         ctx.beginPath();
         this.lines.forEach(pos => {
