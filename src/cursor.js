@@ -1,15 +1,15 @@
 class Cursor {
     constructor(){
-        this.pos = [0, 0];
+        this.pos = {x: 0, y: 0};
     }
 
     updatePos(x, y){
-        this.pos = [x, y];
+        this.pos = {x, y};
     }
 
     draw(ctx){
         ctx.save();
-        ctx.translate(this.pos[0], this.pos[1]);
+        ctx.translate(this.pos.x, this.pos.y);
         ctx.beginPath();
         ctx.lineTo(0, -5);
         ctx.lineTo(0, 0);
