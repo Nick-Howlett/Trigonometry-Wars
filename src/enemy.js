@@ -2,7 +2,6 @@ import MovingObject from "./moving-object";
 
 class Enemy extends MovingObject{
   constructor(id, pos, vel, direc){
-    console.log(direc);
     super(pos, vel, direc);
     this.id = id;
     this.radius = 10;

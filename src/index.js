@@ -1,6 +1,8 @@
 import Game from './game';
+import {dotProduct} from './collisions';
 
 document.addEventListener("DOMContentLoaded", () => {
+    window.dotProduct = dotProduct;
     const canvas = document.getElementById("game-canvas");
     const ctx = canvas.getContext('2d');
     const overlays = Array.from(document.getElementsByClassName('overlay'));

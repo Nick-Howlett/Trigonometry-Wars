@@ -1,6 +1,6 @@
 import Player from "./player";
 import { calculateTheta, randomEdgePos} from './utils';
-import { lineCircleCollision, edgeCollision} from './collisions'; 
+import { lineCircleCollision, lineLineCollision} from './collisions'; 
 import Cursor from "./cursor";
 import Laser from "./laser";
 import Enemy from './enemy';
@@ -13,6 +13,7 @@ class Game {
         this.ctx = ctx;
         this.dims = [canvas.width, canvas.height];
         this.mid = [canvas.width / 2, canvas.height / 2];
+        this.edges = [[[0, 0], [canvas.width, 0]], [[0, 0], [0, canvas.height]], [[canvas.width, 0], [canvas.width, canvas.height]], [[0, canvas.height], [canvas.width, canvas.height]]];
         this.player = new Player(this.mid, 0, 0);
         this.cursor = new Cursor();
         this.score = 0;
@@ -25,7 +26,6 @@ class Game {
         this.canvas.addEventListener("mousemove", e => { // from https://codepen.io/chrisjaime/pen/lcEpn
             const rect = this.canvas.getBoundingClientRect();
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
-            console.log(this.cursor.pos);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
             this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos));
@@ -48,22 +48,26 @@ class Game {
         this.finishOverlay.appendChild(score);
     }
 
-
     check_collisions(){
         this.entities.slice(1).forEach(enemy => {
-            console.log(enemy.pos)
             if(this.laser){
-            let pos = this.laser.pos;
-            this.laser.vec.forEach(vector => {
-                if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
-                    delete this.entities[this.entities.indexOf(enemy)];
-                    this.score += 100;
-                }
-                    pos = vector;
+                let pos = this.laser.pos;
+                this.laser.vec.forEach(vector => {
+                    if(lineCircleCollision([pos, vector], enemy.pos, enemy.radius)){
+                        delete this.entities[this.entities.indexOf(enemy)];
+                        this.score += 100;
+                    }
+                        pos = vector;
                 });
             }
             if(this.player.is_collided(enemy)) this.gameOver();
         });
+        if(this.laser){
+            this.edges.forEach(edge => {
+                const t = lineLineCollision([this.laser.pos, this.laser.vec[0]], edge);
+                if(typeof t === "number") this.laser.grow(t);
+            });
+        }
     }
 
     render(){
@@ -76,7 +80,8 @@ class Game {
 
     tick(){
         if(this.laser){
-            this.laser.grow();
+            this.laser.grow(2);
+            this.laser.update_duration();
             if(this.laser.is_finished()) this.laser = null;
         }
         this.entities.forEach(entity => {
