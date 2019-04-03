@@ -6,14 +6,11 @@ export const samePoint = (p1, p2) => {
 
 //https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
 export const lineCircleCollision = (line, center, radius) => { 
-  console.log(line);
   const lineVec = line.vectorize();
-  console.log(lineVec);
   const startToCenter = new Vector(center, line.p);
   const a = lineVec.dot(lineVec);
   const b = 2 * startToCenter.dot(lineVec);
   const c = startToCenter.dot(startToCenter) - radius * radius;
-  console.log([a, b, c]);
   let discrim = (b * b) - (4 * a * c);
   if(discrim > 0){
     discrim = Math.sqrt(discrim);
