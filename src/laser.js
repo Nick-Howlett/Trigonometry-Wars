@@ -4,23 +4,33 @@ import Line from './line';
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
-        this.duration = 6;
+        this.duration = 7;
         this.theta = theta;
-        const vec = calculateVector(theta, -200);
+        this.reflections = 4;
+        const vec = calculateVector(theta, -100);
         this.vecs = [new Line(this.pos, {x: this.pos.x + vec.x, y: this.pos.y + vec.y})];     
-    }
+    }   
 
     is_finished(){
-        return this.duration === 0;
+        if(this.reflections === 0){
+            if(this.duration === 0){
+                return true;
+            } else{
+                this.duration--;
+            }
+        }
+        return false;
     }
 
-    update_duration(){
-        this.duration--;
-    }
 
-    bounceX(){
-        const current = this.vecs[this.vecs.length - 1];
-        this.vecs.push([-current.x, current.y]);
+    reflect(newMagnitude, laserLine, reflectLine){
+        if(this.reflections === 0) return;
+        const laserVec = laserLine.vectorize();
+        const norm = reflectLine.normalVec().normalize();
+        const reflectVec = laserVec.subtract(norm.scale(2 * (laserVec.dot(norm)))).scale(newMagnitude);
+        const currentVec = this.vecs[this.vecs.length - 1];
+        this.vecs.push(new Line(currentVec.q, {x: currentVec.q.x + reflectVec.x, y: currentVec.q.y + reflectVec.y}));
+        this.reflections--;
     }
 
     grow(factor){

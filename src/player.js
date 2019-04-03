@@ -1,11 +1,14 @@
 import MovingObject from './moving-object';
 import Vector from './vector';
+import Line from './line';
+import {lineLineCollision} from './collisions';
 
 
 class Player extends MovingObject{
     constructor(pos, vel, direc){
         super(pos, vel, direc);
-        this.lines = [[-10, 4], [0, -22], [10, 4], [0, 0]];
+        this.drawLines = [[-10, 4], [0, -22], [10, 4], [0, 0]]  ;
+        this.radius = 10;
     }
 
     is_collided(enemy){
@@ -24,8 +27,8 @@ class Player extends MovingObject{
         ctx.translate(this.pos.x, this.pos.y);
         ctx.rotate(this.direc - Math.PI / 2);
         ctx.beginPath();
-        this.lines.forEach(pos => {
-            ctx.lineTo(pos[0], pos[1]);
+        this.drawLines.forEach(line => {
+            ctx.lineTo(line[0], line[1]);
         });
         ctx.fill();
         ctx.restore();

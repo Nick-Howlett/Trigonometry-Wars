@@ -39,10 +39,12 @@ export const lineLineCollision = (line1, line2) => {
   const denom = r.cross(s);
   if(num === 0 && denom === 0){
     if(samePoint(line1.p, line2.p) || samePoint(line1.p, line2.q) || samePoint(line1.q, line2.p) || samePoint(line1.q, line2.q)){ //lines literally start or end at same point
-      return true;
+      return 0.1;
     } else {
-      return ((line1.p.x - line2.p.x < 0 && line1.p.x - line2.q.x < 0 && line1.q.x - line2.p.x < 0 && line1.q.x - line2.q.x < 0) || 
-             (line1.p.y - line2.p.y < 0 && line1.p.y - line2.q.y < 0 && line1.q.y - line2.p.y < 0 && line1.q.y - line2.q.y < 0)); //Do lines overlap?
+      if((line1.p.x - line2.p.x < 0 && line1.p.x - line2.q.x < 0 && line1.q.x - line2.p.x < 0 && line1.q.x - line2.q.x < 0) || 
+         (line1.p.y - line2.p.y < 0 && line1.p.y - line2.q.y < 0 && line1.q.y - line2.p.y < 0 && line1.q.y - line2.q.y < 0)){ //Do lines overlap?
+        return 0.1;
+      } 
     }
   } else if(denom === 0){ //parallel
     return false;

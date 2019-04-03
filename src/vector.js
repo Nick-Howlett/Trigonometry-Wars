@@ -10,6 +10,24 @@ export default class Vector {
     return (this.x * vec.x) + (this.y * vec.y);
   }
 
+  scale(scalar){
+    this.x *= scalar;
+    this.y *= scalar;
+    return this;
+  }
+
+  normalize(){
+    const mag = this.magnitude();
+    this.x /= mag;
+    this.y /= mag;
+    return this;
+  }
+
+  subtract(vec){
+    this.x -= vec.x;
+    this.y -= vec.y;
+    return this;
+  }
 
   cross(vec){
     return this.x * vec.y - this.y * vec.x;

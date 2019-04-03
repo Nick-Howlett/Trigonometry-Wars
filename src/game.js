@@ -1,5 +1,5 @@
 import Player from "./player";
-import { calculateTheta, randomEdgePos} from './utils';
+import { calculateTheta, randomEdgePos, calculateVector} from './utils';
 import { lineCircleCollision, lineLineCollision} from './collisions'; 
 import Line from "./line";
 import Cursor from "./cursor";
@@ -32,7 +32,9 @@ class Game {
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
-            this.laser = new Laser(this.player.pos, calculateTheta(this.player.pos, this.cursor.pos));
+            const theta = calculateTheta(this.player.pos, this.cursor.pos);
+            const offsetVec = calculateVector(theta, -22);
+            this.laser = new Laser({x: this.player.pos.x + offsetVec.x, y: this.player.pos.y + offsetVec.y}, theta);
         });
         this.spawnInterval = setInterval(() => {
             const startPos = randomEdgePos(...this.dims);
@@ -67,12 +69,23 @@ class Game {
             if(this.player.is_collided(enemy)) this.gameOver();
         });
         if(this.laser){
-            this.edges.forEach(edge => {
-                const t = lineLineCollision(this.laser.vecs[0], edge);
+            for(let i = 0; i < this.edges.length; i++){
+                const laser = this.laser.vecs[this.laser.vecs.length - 1];
+                if(lineCircleCollision(laser, this.player.pos, this.player.radius)){
+                    this.render();
+                    this.laser = null;
+                    break;
+                }
+                const edge = this.edges[i];
+                const t = lineLineCollision(laser, edge);
                 if(typeof t === "number") {
                     this.laser.grow(t);
+                    const newMag = laser.len() - (laser.len() * t);
+                    this.laser.reflect(-newMag, laser, edge);
                 }
-            });
+              
+            }
+            
         }
     }
 
@@ -87,7 +100,6 @@ class Game {
     tick(){
         if(this.laser){
             this.laser.grow(2);
-            this.laser.update_duration();
             if(this.laser.is_finished()) this.laser = null;
         }
         this.entities.forEach(entity => {
