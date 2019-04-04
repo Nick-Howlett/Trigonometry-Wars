@@ -33,7 +33,7 @@ class Game {
         });
         this.clickListener = this.canvas.addEventListener("click", e => {
             const theta = calculateTheta(this.player.pos, this.cursor.pos);
-            const offsetVec = calculateVector(theta, -22);
+            const offsetVec = calculateVector(theta, -30);
             this.laser = new Laser({x: this.player.pos.x + offsetVec.x, y: this.player.pos.y + offsetVec.y}, theta);
         });
         this.spawnInterval = setInterval(() => {
@@ -71,8 +71,10 @@ class Game {
         if(this.laser){
             for(let i = 0; i < this.edges.length; i++){
                 const laser = this.laser.vecs[this.laser.vecs.length - 1];
-                if(lineCircleCollision(laser, this.player.pos, this.player.radius)){
-                    this.render();
+                const u = this.player.laserCollision(laser);
+                if(typeof u === "number"){
+                    this.laser.grow(u);
+                    this.laser.draw(this.ctx);
                     this.laser = null;
                     break;
                 }
@@ -110,6 +112,7 @@ class Game {
             }
             entity.move();
         });
+        this.player.calculateLines();
         this.player.decelerate();   
         this.check_collisions();
         this.score++;
