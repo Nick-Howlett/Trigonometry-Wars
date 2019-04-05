@@ -67,9 +67,11 @@ class Game {
         clearInterval(this.tickInterval);
         clearInterval(this.spawnInterval);
         this.canvas.className = "inactive";
-        this.finishOverlay.className = "overlay";
-        const score = document.createTextNode(`Your Score is: ${this.score}`); 
-        this.finishOverlay.appendChild(score);
+        this.finishOverlay.className = "overlay game-over";
+        const scoreSpan = document.getElementById('score');
+        scoreSpan.innerHTML = "";
+        const score = document.createTextNode(`Your Score was: ${this.score}`); 
+        scoreSpan.appendChild(score);
     }
 
     check_collisions(){
@@ -132,7 +134,7 @@ class Game {
         });
         this.player.calculateLines();
         if(this.w) 
-            this.player.accelerate(-4);
+            this.player.accelerate(-3);
         else
             this.player.decelerate();
         this.check_collisions();

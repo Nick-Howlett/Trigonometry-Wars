@@ -5,19 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href='styles/page.css'>
+        <link href="https://fonts.googleapis.com/css?family=Iceland" rel="stylesheet">
         <title>Game</title>
         <script src="dist/main.js"></script>
     </head>
     <body>
+        <header>
+                <h1>Trigonometry Wars</h1>
+        </header>
         <div id="canvas-container">
             <canvas id="game-canvas" height="600" width="900"></canvas>
             <canvas id="background-canvas" height="600" width="900"></canvas>
-            <div class="overlay">
-                <button class="play-button">Play</button>
+            <div class="overlay rules">
+                <h2>Welcome to Trigonometry Wars!</h2>
+                <p>
+                    Enemies will come at you from all sides of the screen <br>
+                    <b>survive as long as you can!</b> <br>
+                    <span class="highlight">Hold W</span> to move forward and <span class="highlight">move the mouse</span> to turn the player <br>
+                    <span class="highlight">Hold left click</span> to charge your laser, and <span class="highlight">release to fire</span> <br>
+                    Your laser will bounce off the walls. If you hit an enemy on a later bounce,
+                    or multiple enemies with one laser blast, you will receive bonus points. <br>
+                </p>
+                <button class="game-button play-button">Play</button>
             </div>
-            <div id="game-over" class="overlay hidden">
+            <div id="game-over" class="overlay gameover hidden">
                 <h2>Game Over!</h2>
-                <button class="play-button">Play Again?</button>
+                <span id="score"></span>
+                <button class="game-button play-button">Play Again?</button>
             </div>
             <div id="score-overlay">
             </div>

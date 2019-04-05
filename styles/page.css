@@ -1,5 +1,28 @@
+*{
+    font-family: "Iceland", sans-serif;
+}
+
+body{
+    background: black;
+}
+
+h1{
+    color: #00ff00;
+    font-size: 70px;
+    text-transform: uppercase;
+}
+
+h2{
+    margin-bottom: .5rem;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+}
+
 #game-canvas{
-    border: 1px solid black;
+    border: 1px solid #00ff00;  
     background: transparent;
 }
 
@@ -7,27 +30,36 @@
     cursor: none;
 }
 
+
 #background-canvas{
     position: absolute;
     z-index: -1;
 }
 
 #canvas-container{
-    margin-top: 100px;
+    margin-top: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
 }
 
+.highlight{
+    color: #00ff00;
+}
 
+.rules {
+    top: 120px;
+    width: 630px;
+    height: 350px;
+}
 .overlay{
     margin: 0 auto;
     position: absolute;
-    top: 241px;
-    padding: 20px 40px;  
-    background: white;
-    border: 1px solid grey;
+    padding: 20px 20px; 
+    font-size: 24px;
+    background: grey;
+    border: 1px solid black;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -35,10 +67,38 @@
     align-items: center;
 }
 
+#score{
+    margin-bottom: .5rem;
+}
+
+.game-over{
+    width: 250px;
+    height: 150px;
+}
+
+.game-button{
+    width: 150px;
+    height: 60px;
+    border-radius: 4px;
+    border: 1px solid black;
+    font-size: 25px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 6px 6px 15px -6px rgba(0,0,0,0.75);
+}
+
+.game-button:active{
+    position: relative;
+    top: 2px;
+    left: 2px;
+    box-shadow: none;
+}
+
 #score-overlay{
     position: absolute;
     top: 20px;
     color: white;
+    font-size: 30px;
 }
 
 .hidden{
