@@ -22,6 +22,7 @@ class Game {
         this.cursor = new Cursor();
         this.score = 0;
         this.laser = null;
+
         this.entities = [this.player];
     }
 
@@ -31,17 +32,34 @@ class Game {
             const rect = this.canvas.getBoundingClientRect();
             this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
         });
-        this.clickListener = this.canvas.addEventListener("click", e => {
-            const theta = calculateTheta(this.player.pos, this.cursor.pos);
-            const offsetVec = calculateVector(theta, -30);
-            this.laser = new Laser({x: this.player.pos.x + offsetVec.x, y: this.player.pos.y + offsetVec.y}, theta);
+        this.clickListener = document.addEventListener("mousedown", e => {
+            const chargeTime = 500;
+            let i = 0;
+            this.chargeInterval = setInterval(() => {
+                this.player.chargeLaser(i/chargeTime);   
+                i += 10;
+            }, 10);
         });
         this.spawnInterval = setInterval(() => {
             const startPos = randomEdgePos(...this.dims);
             this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(startPos, this.player.pos)));
         }, 1000);
         document.addEventListener("keydown", e => {
-            if(e.key === "w") this.player.accelerate(-4);
+            if(e.key === "w") this.w = true;
+        });
+        document.addEventListener("keyup", e => {
+            if(e.key === "w") this.w = false;
+        });
+        this.mouseUpListener = document.addEventListener("mouseup", e => {
+            if(this.chargeInterval){
+                clearInterval(this.chargeInterval);
+            }
+            if(this.player.charged()){
+                const theta = calculateTheta(this.player.pos, this.cursor.pos);
+                const offsetVec = calculateVector(theta, -30);
+                this.laser = new Laser({x: this.player.pos.x + offsetVec.x, y: this.player.pos.y + offsetVec.y}, theta);
+            }
+            this.player.discharge();    
         });
     }
 
@@ -71,13 +89,13 @@ class Game {
         if(this.laser){
             for(let i = 0; i < this.edges.length; i++){
                 const laser = this.laser.vecs[this.laser.vecs.length - 1];
-                const u = this.player.laserCollision(laser);
-                if(typeof u === "number"){
-                    this.laser.grow(u);
-                    this.laser.draw(this.ctx);
-                    this.laser = null;
-                    break;
-                }
+                // const u = this.player.laserCollision(laser);
+                // if(typeof u === "number"){
+                //     this.laser.grow(u);
+                //     this.laser.draw(this.ctx);
+                //     this.laser = null;
+                //     break;
+                // }
                 const edge = this.edges[i];
                 const t = lineLineCollision(laser, edge);
                 if(typeof t === "number") {
@@ -102,18 +120,21 @@ class Game {
     tick(){
         if(this.laser){
             this.laser.grow(2);
+            this.laser.fade();
             if(this.laser.is_finished()) this.laser = null;
         }
         this.entities.forEach(entity => {
-            if(entity === this.player){
+            if(entity === this.player)
                 entity.rotate(calculateTheta(this.player.pos, this.cursor.pos));
-            } else {
+            else
                 entity.rotate(calculateTheta(this.player.pos, entity.pos));
-            }
             entity.move();
         });
         this.player.calculateLines();
-        this.player.decelerate();   
+        if(this.w) 
+            this.player.accelerate(-4);
+        else
+            this.player.decelerate();
         this.check_collisions();
         this.score++;
         this.render();

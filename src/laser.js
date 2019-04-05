@@ -4,7 +4,7 @@ import Line from './line';
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
-        this.duration = 7;
+        this.duration = 10;
         this.theta = theta;
         this.reflections = 4;
         const vec = calculateVector(theta, -100);
@@ -15,21 +15,27 @@ class Laser {
         if(this.reflections === 0){
             if(this.duration === 0){
                 return true;
-            } else{
-                this.duration--;
             }
         }
         return false;
     }
 
+    fade(){
+        this.duration--;
+        console.log(this.duration);
+    }
+
 
     reflect(newMagnitude, laserLine, reflectLine){
-        if(this.reflections === 0) return;
+        if(this.reflections === 0){
+            this.duration = Math.min(this.duration, 6);
+            return; //stop if we are out of reflections
+        }
         const laserVec = laserLine.vectorize();
         const norm = reflectLine.normalVec().normalize();
         const reflectVec = laserVec.subtract(norm.scale(2 * (laserVec.dot(norm)))).scale(newMagnitude);
         const currentVec = this.vecs[this.vecs.length - 1];
-        this.vecs.push(new Line(currentVec.q, {x: currentVec.q.x + reflectVec.x, y: currentVec.q.y + reflectVec.y}));
+        this.vecs.push(reflectVec.createLine(currentVec.q));
         this.reflections--;
     }
 
@@ -43,7 +49,7 @@ class Laser {
         ctx.save();
         ctx.beginPath();
         ctx.lineWidth = 3;
-        ctx.strokeStyle = "#11e023";
+        ctx.strokeStyle = "#1aff1a";
         this.vecs.forEach(vector => {
             ctx.moveTo(vector.p.x, vector.p.y);
             ctx.lineTo(vector.q.x, vector.q.y);

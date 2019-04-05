@@ -9,6 +9,7 @@ class Cursor {
 
     draw(ctx){
         ctx.save();
+        ctx.strokeStyle = "white";
         ctx.translate(this.pos.x, this.pos.y);
         ctx.beginPath();
         ctx.lineTo(0, -5);

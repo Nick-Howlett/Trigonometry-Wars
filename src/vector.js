@@ -1,3 +1,6 @@
+import Line from './line';
+
+
 export default class Vector {
   constructor(p, q){
     this.x = q.x - p.x;
@@ -5,6 +8,9 @@ export default class Vector {
     this.coords = [this.x, this.y];
   }
 
+  createLine(point){
+    return new Line({x: point.x, y: point.y}, {x: point.x + this.x, y: point.y + this.y});
+  }
 
   dot(vec){ 
     return (this.x * vec.x) + (this.y * vec.y);

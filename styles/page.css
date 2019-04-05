@@ -1,9 +1,15 @@
 #game-canvas{
     border: 1px solid black;
+    background: transparent;
 }
 
 #game-canvas.active{
     cursor: none;
+}
+
+#background-canvas{
+    position: absolute;
+    z-index: -1;
 }
 
 #canvas-container{
@@ -31,7 +37,8 @@
 
 #score-overlay{
     position: absolute;
-    top: 20px;    
+    top: 20px;
+    color: white;
 }
 
 .hidden{

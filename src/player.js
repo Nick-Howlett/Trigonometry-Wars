@@ -1,6 +1,6 @@
 import MovingObject from './moving-object';
-import Vector from './vector';
 import Line from './line';
+import Vector from './vector';
 import { rotatePoint } from './utils';
 import {lineLineCollision, lineCircleCollision} from './collisions';
 
@@ -10,6 +10,7 @@ class Player extends MovingObject{
         super(pos, vel, direc);
         this.radius = 10;
         this.points = [{x: -10, y: 4}, {x: 0, y: -22}, {x: 10, y: 4}];
+        this.charge = 0;
         this.calculateLines();
     }
 
@@ -28,20 +29,44 @@ class Player extends MovingObject{
         return false;
     }
 
+    chargeLaser(percent){
+        if(percent > 1) percent = 1;
+        this.charge = percent;
+    }
+
+    charged(){
+        return this.charge === 1;
+    }
+
+    discharge(){
+        this.charge = 0;
+    }
+
 
     calculateLines(){
         const x = this.pos.x;   
         const y = this.pos.y;
-        const points = this.points.map(point => rotatePoint(point, this.direc - Math.PI / 2));
-        this.lines = [new Line({x, y}, {x: x + points[0].x, y: y + points[0].y}),
-                      new Line({x: x + points[0].x, y: y + points[0].y}, {x: x + points[1].x, y: y + points[1].y}),
-                      new Line({x: x + points[1].x, y: y + points[1].y}, {x: x + points[2].x, y: y + points[2].y}),
-                      new Line({x: x + points[2].x, y: y + points[2].y}, {x, y})];
+        const points = this.points.map(point => {
+            const newPoint = rotatePoint(point, this.direc - Math.PI / 2);
+            newPoint.x += x;
+            newPoint.y += y;
+            return newPoint;
+        });
+        points.unshift({x, y});
+        points.push({x, y});
+        this.lines = [];
+        for(let i = 0; i < points.length - 1; i++){
+            this.lines.push(new Line(points[i], points[i + 1]));
+        }
+        const charge1 = new Vector(points[1], points[2]);
+        const charge2 = new Vector(points[3], points[2]);
+        this.chargeLines = [charge1.scale(this.charge).createLine(points[1]), charge2.scale(this.charge).createLine(points[3])];
+
     }
 
     draw(ctx){
-        ctx.fillstyle = "#dee4ed";
         ctx.save();
+        ctx.fillStyle = "#D0D0D0";
         ctx.beginPath();
         ctx.moveTo(this.pos.x, this.pos.y);
         this.lines.forEach(line => {
@@ -49,6 +74,16 @@ class Player extends MovingObject{
         });
         ctx.fill();
         ctx.restore();
+        ctx.save();
+        ctx.strokeStyle = "#1aff1a";
+        ctx.lineWidth = 3;
+        this.chargeLines.forEach(line => {
+            ctx.beginPath();
+            ctx.moveTo(line.p.x, line.p.y);
+            ctx.lineTo(line.q.x, line.q.y);
+            ctx.stroke();
+        });
+        ctx.restore();    
     }
 }
 
