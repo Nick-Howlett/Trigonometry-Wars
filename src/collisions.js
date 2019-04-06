@@ -32,9 +32,9 @@ export const lineCircleCollision = (line, center, radius) => {
 
 //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 export const lineLineCollision = (line1, line2) => {
-  const r = line1.vectorize();
-  const s = line2.vectorize();
-  const startVec = new Vector(line1.p, line2.p);
+  const r = new Vector(line1.q, line1.p);
+  const s = new Vector(line2.q, line2.p);
+  const startVec = new Vector(line2.p, line1.p);
   const num = startVec.cross(r);
   const denom = r.cross(s);
   if(num === 0 && denom === 0){
@@ -58,3 +58,4 @@ export const lineLineCollision = (line1, line2) => {
     }
   }
 };
+

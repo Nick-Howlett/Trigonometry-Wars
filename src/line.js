@@ -11,7 +11,7 @@ export default class line {
   }
 
   normalVec(){
-    return new Vector({x: 0, y: 0}, {x: -(this.q.x - this.p.x), y: this.q.y - this.p.y});
+    return new Vector({x: 0, y: 0}, {x: -(this.q.y - this.p.y), y: this.q.x - this.p.x});
   }
 
   vectorize(){

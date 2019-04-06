@@ -4,7 +4,7 @@ import Line from './line';
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
-        this.duration = 10;
+        this.duration = 15;
         this.theta = theta;
         this.reflections = 4;
         const vec = calculateVector(theta, -100);
@@ -12,37 +12,36 @@ class Laser {
     }   
 
     is_finished(){
-        if(this.reflections === 0){
-            if(this.duration === 0){
-                return true;
-            }
-        }
-        return false;
+        return this.duration <= 0;
     }
 
     fade(){
         this.duration--;
-        console.log(this.duration);
     }
 
 
-    reflect(newMagnitude, laserLine, reflectLine){
+    reflect(laserLine, reflectLine){
         if(this.reflections === 0){
             this.duration = Math.min(this.duration, 6);
             return; //stop if we are out of reflections
         }
         const laserVec = laserLine.vectorize();
         const norm = reflectLine.normalVec().normalize();
-        const reflectVec = laserVec.subtract(norm.scale(2 * (laserVec.dot(norm)))).scale(newMagnitude);
+        const reflectVec = laserVec.subtract(norm.scale(2 * (laserVec.dot(norm))));
         const currentVec = this.vecs[this.vecs.length - 1];
-        this.vecs.push(reflectVec.createLine(currentVec.q));
+        const newLine = reflectVec.createLine(currentVec.q);
+        const laserNormalized = reflectVec.normalize();
+        newLine.p.x += laserNormalized.x;
+        newLine.p.y += laserNormalized.y;
+        this.vecs.push(newLine);
         this.reflections--;
     }
 
     grow(factor){
         const current = this.vecs[this.vecs.length - 1];
-        current.q.x = current.p.x + (current.q.x - current.p.x) * factor;
-        current.q.y = current.p.y + (current.q.y - current.p.y) * factor;
+        const point = current.p;
+        this.vecs[this.vecs.length - 1] = current.vectorize().scale(factor).createLine(point);
+        return this.vecs[this.vecs.length - 1];
     }
 
     draw(ctx){
@@ -50,6 +49,10 @@ class Laser {
         ctx.beginPath();
         ctx.lineWidth = 3;
         ctx.strokeStyle = "#1aff1a";
+        ctx.shadowColor = "#1aff1a";
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 5;
         this.vecs.forEach(vector => {
             ctx.moveTo(vector.p.x, vector.p.y);
             ctx.lineTo(vector.q.x, vector.q.y);

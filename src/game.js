@@ -1,10 +1,11 @@
 import Player from "./player";
-import { calculateTheta, randomEdgePos, calculateVector} from './utils';
+import { calculateTheta, calculateVector} from './utils';
 import { lineCircleCollision, lineLineCollision} from './collisions'; 
 import Line from "./line";
 import Cursor from "./cursor";
-import Laser from "./laser";
-import Enemy from './enemy';
+import runGameIntervals from './intervals';
+import startInputListeners from './inputs';
+
 
 class Game {
     constructor(canvas, ctx, finishOverlay, scoreOverlay){
@@ -22,50 +23,17 @@ class Game {
         this.cursor = new Cursor();
         this.score = 0;
         this.laser = null;
-
+        this.enemySpeed = 1;
         this.entities = [this.player];
     }
 
     start(){
-        this.tickInterval = setInterval(this.tick.bind(this), 20);
-        this.canvas.addEventListener("mousemove", e => { // from https://codepen.io/chrisjaime/pen/lcEpn
-            const rect = this.canvas.getBoundingClientRect();
-            this.cursor.updatePos(e.clientX - rect.left, e.clientY - rect.top);
-        });
-        this.clickListener = document.addEventListener("mousedown", e => {
-            const chargeTime = 500;
-            let i = 0;
-            this.chargeInterval = setInterval(() => {
-                this.player.chargeLaser(i/chargeTime);   
-                i += 10;
-            }, 10);
-        });
-        this.spawnInterval = setInterval(() => {
-            const startPos = randomEdgePos(...this.dims);
-            this.entities.push(new Enemy(this.eid, startPos, 2, calculateTheta(startPos, this.player.pos)));
-        }, 1000);
-        document.addEventListener("keydown", e => {
-            if(e.key === "w") this.w = true;
-        });
-        document.addEventListener("keyup", e => {
-            if(e.key === "w") this.w = false;
-        });
-        this.mouseUpListener = document.addEventListener("mouseup", e => {
-            if(this.chargeInterval){
-                clearInterval(this.chargeInterval);
-            }
-            if(this.player.charged()){
-                const theta = calculateTheta(this.player.pos, this.cursor.pos);
-                const offsetVec = calculateVector(theta, -30);
-                this.laser = new Laser({x: this.player.pos.x + offsetVec.x, y: this.player.pos.y + offsetVec.y}, theta);
-            }
-            this.player.discharge();    
-        });
+        this.intervals = runGameIntervals.bind(this)();
+        startInputListeners.bind(this)();
     }
 
     gameOver(){
-        clearInterval(this.tickInterval);
-        clearInterval(this.spawnInterval);
+        this.intervals.forEach(interval => clearInterval(interval));
         this.canvas.className = "inactive";
         this.finishOverlay.className = "overlay game-over";
         const scoreSpan = document.getElementById('score');
@@ -78,10 +46,10 @@ class Game {
         this.entities.slice(1).forEach(enemy => {
             if(this.laser){
                 let pos = this.laser.pos;
-                this.laser.vecs.forEach(vector => {
+                this.laser.vecs.forEach((vector, i) => {
                     if(lineCircleCollision(vector, enemy.pos, enemy.radius)){
                         delete this.entities[this.entities.indexOf(enemy)];
-                        this.score += 100;
+                        this.score += 100 * i + 1;
                     }
                     pos = vector;
                 });
@@ -89,25 +57,21 @@ class Game {
             if(this.player.is_collided(enemy)) this.gameOver();
         });
         if(this.laser){
+            let min = 10;
+            let min_edge = null;
             for(let i = 0; i < this.edges.length; i++){
-                const laser = this.laser.vecs[this.laser.vecs.length - 1];
-                // const u = this.player.laserCollision(laser);
-                // if(typeof u === "number"){
-                //     this.laser.grow(u);
-                //     this.laser.draw(this.ctx);
-                //     this.laser = null;
-                //     break;
-                // }
+                let laser = this.laser.vecs[this.laser.vecs.length - 1];
                 const edge = this.edges[i];
                 const t = lineLineCollision(laser, edge);
-                if(typeof t === "number") {
-                    this.laser.grow(t);
-                    const newMag = laser.len() - (laser.len() * t);
-                    this.laser.reflect(-newMag, laser, edge);
+                if(typeof t === "number" && t < min){
+                    min = t;
+                    min_edge = edge;
                 }
-              
             }
-            
+            if(min_edge){
+                const laser = this.laser.grow(min);
+                this.laser.reflect(laser, min_edge);
+            }            
         }
     }
 
@@ -121,8 +85,8 @@ class Game {
 
     tick(){
         if(this.laser){
-            this.laser.grow(2);
-            this.laser.fade();
+            this.laser.grow(3);
+            this.laser.fade();  
             if(this.laser.is_finished()) this.laser = null;
         }
         this.entities.forEach(entity => {

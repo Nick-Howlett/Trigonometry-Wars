@@ -5,6 +5,7 @@ class Enemy extends MovingObject{
     super(pos, vel, direc);
     this.id = id;
     this.radius = 10;
+    setInterval(() => this.vel += 0.5, 5000);
   }
 
   

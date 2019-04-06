@@ -76,6 +76,10 @@ class Player extends MovingObject{
         ctx.restore();
         ctx.save();
         ctx.strokeStyle = "#1aff1a";
+        ctx.shadowColor = "#1aff1a";
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 4;
         ctx.lineWidth = 3;
         this.chargeLines.forEach(line => {
             ctx.beginPath();
