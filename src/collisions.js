@@ -1,5 +1,23 @@
 import Vector from './vector';
 
+
+
+export const bestLaserCollision = (laser, ...lines) => {
+    let min = 10;
+    let min_edge = null;
+    for(let i = 0; i < lines.length; i++){
+      
+        const edge = lines[i];
+        const t = lineLineCollision(laser, edge);
+        if(typeof t === "number" && t < min){
+            min = t;
+            min_edge = edge;
+        }
+    }
+    return [min, min_edge];           
+};
+
+
 export const samePoint = (p1, p2) => {
   return (p1.x === p2.x) && (p1.y === p2.y);
 };

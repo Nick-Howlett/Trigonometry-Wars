@@ -32,6 +32,17 @@ export const randomEdgePos = (width, height) => {
     }
 };
 
+export const randomTheta = () => {
+    return Math.floor(Math.random * Math.PI * 2);
+}
+
+
+export const aggregateEdges = (...edgeCollections) => {
+    let ret = [];
+    edgeCollections.forEach(collection => ret = ret.concat(collection.lines));
+    return ret;
+};
+
 
 export const randInt = max => {
     return Math.floor(Math.random() * max);

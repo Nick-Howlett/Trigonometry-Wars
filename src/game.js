@@ -1,10 +1,12 @@
 import Player from "./player";
-import { calculateTheta, calculateVector} from './utils';
-import { lineCircleCollision, lineLineCollision} from './collisions'; 
+import { calculateTheta, aggregateEdges } from './utils';
+import { lineCircleCollision, bestLaserCollision } from './collisions'; 
 import Line from "./line";
 import Cursor from "./cursor";
-import runGameIntervals from './intervals';
+import runGameIntervals from './intervals'; 
 import startInputListeners from './inputs';
+import Obstacle from "./obstacle";
+import { explode } from "./particles/explosions";
 
 
 class Game {
@@ -25,6 +27,11 @@ class Game {
         this.laser = null;
         this.enemySpeed = 1;
         this.entities = [this.player];
+        this.obstacles = [new Obstacle({x: this.canvas.width / 4, y: this.canvas.height / 4}),
+                          new Obstacle({x: 3 * this.canvas.width / 4, y: this.canvas.height / 4}),
+                          new Obstacle({x: this.canvas.width / 4, y: 3 * this.canvas.height / 4}),
+                          new Obstacle({x: 3* this.canvas.width / 4, y: 3 * this.canvas.height / 4})];
+        this.particles = [];
     }
 
     start(){
@@ -48,6 +55,7 @@ class Game {
                 let pos = this.laser.pos;
                 this.laser.vecs.forEach((vector, i) => {
                     if(lineCircleCollision(vector, enemy.pos, enemy.radius)){
+                        this.particles = this.particles.concat(explode(enemy.pos));
                         delete this.entities[this.entities.indexOf(enemy)];
                         this.score += 100 * i + 1;
                     }
@@ -56,23 +64,16 @@ class Game {
             }
             if(this.player.is_collided(enemy)) this.gameOver();
         });
+        const edges = aggregateEdges(this.player, ...this.obstacles);
+        let t, edge;
         if(this.laser){
-            let min = 10;
-            let min_edge = null;
-            for(let i = 0; i < this.edges.length; i++){
-                let laser = this.laser.vecs[this.laser.vecs.length - 1];
-                const edge = this.edges[i];
-                const t = lineLineCollision(laser, edge);
-                if(typeof t === "number" && t < min){
-                    min = t;
-                    min_edge = edge;
-                }
-            }
-            if(min_edge){
-                const laser = this.laser.grow(min);
-                this.laser.reflect(laser, min_edge);
-            }            
+            let laser = this.laser.vecs[this.laser.vecs.length - 1];
+            [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
         }
+        if(edge){
+            const laser = this.laser.grow(t);
+            this.laser.reflect(laser, edge);
+        } 
     }
 
     render(){
@@ -81,6 +82,8 @@ class Game {
         if(this.laser) this.laser.draw(this.ctx);
         this.cursor.draw(this.ctx);
         this.entities.forEach(entity => entity.draw(this.ctx));
+        this.obstacles.forEach(obstacle => obstacle.draw(this.ctx));
+        this.particles.forEach(particle => particle.draw(this.ctx));
     }
 
     tick(){
@@ -95,6 +98,11 @@ class Game {
             else
                 entity.rotate(calculateTheta(this.player.pos, entity.pos));
             entity.move();
+        });
+        this.particles.forEach(particle => {
+            particle.move();
+            particle.lifecycle();
+            if(particle.finished()) delete this.particles[this.particles.indexOf(particle)];
         });
         this.player.calculateLines();
         if(this.w) 
