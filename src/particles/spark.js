@@ -1,5 +1,5 @@
 export default class Spark{
-    constructor(start, direction, timeToLive){
+    constructor(start, direction, timeToLive, thickness){
         this.pos = {x: start.x, y: start.y};
         this.direction = direction;
         this.length = Math.random() * 15;
@@ -7,6 +7,7 @@ export default class Spark{
         this.age = 0;
         this.timeToLive = timeToLive || 20; 
         this.opacity = 1;
+        this.thickness = thickness || 1;
     }
 
     finished(){
@@ -29,6 +30,7 @@ export default class Spark{
         ctx.globalAlpha = this.opacity;
         ctx.strokeStyle = "#1aff1a";
         ctx.shadowColor = "#1aff1a";
+        ctx.lineWidth = this.thickness;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.shadowBlur = 5;

@@ -5,7 +5,7 @@ export function explode(pos, theta){
     if(theta){ //we only want half the explosion, this is a collision with a wall;
 
         for(let i = 0; i < 5; i ++){
-            ret.push(new Spark(pos, theta - Math.PI / 2 + Math.random() * Math.PI, 10));
+            ret.push(new Spark(pos, theta - Math.PI / 2 + Math.random() * Math.PI, 10, 2));
         }
     } else{
         for(let i = 0; i < 30; i++){

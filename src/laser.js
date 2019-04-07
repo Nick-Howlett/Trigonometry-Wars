@@ -35,6 +35,7 @@ class Laser {
         newLine.p.y += laserNormalized.y;
         this.vecs.push(newLine);
         this.reflections--;
+        return 1;
     }
 
     grow(factor){

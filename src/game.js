@@ -58,8 +58,7 @@ class Game {
         }
         if(edge){
             const laser = this.laser.grow(t);
-            this.particles = this.particles.concat(explode(laser.q, calculateTheta(laser.p, laser.q)));
-            this.laser.reflect(laser, edge);
+            if(this.laser.reflect(laser, edge)) this.particles = this.particles.concat(explode(laser.q, calculateTheta(laser.p, laser.q)));
         } 
         this.entities.slice(1).forEach(enemy => {
             if(this.laser){
