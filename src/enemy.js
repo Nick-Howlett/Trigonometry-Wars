@@ -1,5 +1,5 @@
 import MovingObject from "./moving-object";
-import { calculateDistance } from './utils';
+import { calculateDistance, calculateVector } from './utils';
 import { lineCircleCollision } from "./collisions";
 import Vector from "./vector";
 
@@ -17,11 +17,11 @@ class Enemy extends MovingObject{
   }
 
   reroute(collidedEdge, playerPos){
-    const norm = collidedEdge.normalVec().normalize().scale(this.radius / 10);
+    const opposite = calculateVector(-this.direc, 1);
     const vec1 = collidedEdge.vectorize().normalize();
     const vec2 = new Vector(collidedEdge.q, collidedEdge.p).normalize();
-    const pos1 = {x: this.pos.x + vec1.x + norm.x, y: this.pos.y + vec2.y + norm.y};
-    const pos2 = {x: this.pos.x + vec2.x + norm.x, y: this.pos.y + vec2.y + norm.y};
+    const pos1 = {x: this.pos.x + vec1.x + opposite.x, y: this.pos.y + vec2.y + opposite.y};
+    const pos2 = {x: this.pos.x + vec2.x + opposite.x, y: this.pos.y + vec2.y + opposite.y};
     if(calculateDistance(pos1, playerPos) > calculateDistance(pos2, playerPos))
       this.pos = pos2;
     else{
