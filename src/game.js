@@ -50,6 +50,16 @@ class Game {
     }
 
     check_collisions(){
+        const edges = aggregateEdges(this.player, ...this.obstacles);
+        let t, edge;
+        if(this.laser){
+            let laser = this.laser.vecs[this.laser.vecs.length - 1];
+            [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
+        }
+        if(edge){
+            const laser = this.laser.grow(t);
+            this.laser.reflect(laser, edge);
+        } 
         this.entities.slice(1).forEach(enemy => {
             if(this.laser){
                 let pos = this.laser.pos;
@@ -64,16 +74,6 @@ class Game {
             }
             if(this.player.is_collided(enemy)) this.gameOver();
         });
-        const edges = aggregateEdges(this.player, ...this.obstacles);
-        let t, edge;
-        if(this.laser){
-            let laser = this.laser.vecs[this.laser.vecs.length - 1];
-            [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
-        }
-        if(edge){
-            const laser = this.laser.grow(t);
-            this.laser.reflect(laser, edge);
-        } 
     }
 
     render(){
@@ -97,7 +97,11 @@ class Game {
                 entity.rotate(calculateTheta(this.player.pos, this.cursor.pos));
             else
                 entity.rotate(calculateTheta(this.player.pos, entity.pos));
-            entity.move();
+            const edges = aggregateEdges(...this.obstacles);
+            const edge = entity.move(edges);
+            if(edge && entity !== this.player){
+                entity.reroute(edge, this.player.pos);
+            }
         });
         this.particles.forEach(particle => {
             particle.move();

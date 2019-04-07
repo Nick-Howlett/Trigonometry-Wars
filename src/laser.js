@@ -4,7 +4,7 @@ import Line from './line';
 class Laser {
     constructor(pos, theta){
         this.pos = pos;
-        this.duration = 15;
+        this.duration = 20;
         this.theta = theta;
         this.reflections = 4;
         const vec = calculateVector(theta, -100);
@@ -22,7 +22,7 @@ class Laser {
 
     reflect(laserLine, reflectLine){
         if(this.reflections === 0){
-            this.duration = Math.min(this.duration, 6);
+            this.duration = Math.min(this.duration, 12);
             return; //stop if we are out of reflections
         }
         const laserVec = laserLine.vectorize();

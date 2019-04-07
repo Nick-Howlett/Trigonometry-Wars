@@ -6,6 +6,10 @@ export const calculateTheta = (pos1, pos2) => {
     return Math.atan2(diffY, diffX);
 };
 
+export const calculateDistance = (pos1, pos2) => {
+    return Math.sqrt((pos2.x - pos1.x)**2 + (pos2.y - pos1.y)**2);
+}
+
 export const calculateVector = (theta, vel) => {
     return new Vector({x: 0, y: 0}, {x: Math.cos(theta) * vel, y: Math.sin(theta) * vel});
 };

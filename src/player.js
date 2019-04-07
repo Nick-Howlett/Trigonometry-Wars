@@ -14,17 +14,15 @@ class Player extends MovingObject{
         this.calculateLines();
     }
 
-    is_collided(enemy){
-        for(let i = 0; i < this.lines.length; i ++){
-            if(lineCircleCollision(this.lines[i], enemy.pos, enemy.radius)) return true;
-        }
-        return false;
-    }
-
-    laserCollision(laser){
-        for(let i = 0; i < this.lines.length; i ++){
-            const t = lineLineCollision(laser, this.lines[i]);
-            if(typeof t === "number") return t;
+    is_collided(collider){
+        if(collider.pos){
+            for(let i = 0; i < this.lines.length; i ++){
+                if(lineCircleCollision(this.lines[i], collider.pos, collider.radius)) return true;
+            }
+        } else {
+            for(let i = 0; i < this.lines.length; i++){
+                if(lineLineCollision(collider, this.lines[i])) return true;
+            }
         }
         return false;
     }
@@ -66,7 +64,7 @@ class Player extends MovingObject{
 
     draw(ctx){
         ctx.save();
-        ctx.fillStyle = "#D0D0D0";
+        ctx.fillStyle = "White";
         ctx.beginPath();
         ctx.moveTo(this.pos.x, this.pos.y);
         this.lines.forEach(line => {
