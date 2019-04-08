@@ -52,7 +52,7 @@ class Game {
     check_collisions(){
         const edges = aggregateEdges(this.player, ...this.obstacles);
         let t, edge;
-        if(this.laser){
+        if(this.laser && this.laser.is_collidable()){
             let laser = this.laser.vecs[this.laser.vecs.length - 1];
             [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
         }
