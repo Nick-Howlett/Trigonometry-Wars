@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
             overlays.forEach(overlay => overlay.className = "overlay hidden");
             canvas.className = "active";
             scoreSubmitted = false;
+            formSubmit.value = "Submit Score";
         });
     });
     scoreButton.forEach(button => {
