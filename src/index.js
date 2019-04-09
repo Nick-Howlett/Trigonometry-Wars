@@ -59,9 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.set('score', game.score);
             axios.post('https://trigonometry-scores.herokuapp.com/api/scores', {name: playerName.value, score: game.score})
                 .then(() => {
-                    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
                     scoreFormButton.innerHTML = "";
                     scoreFormButton.appendChild(document.createTextNode = "Score Submitted");
+                    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
                 })
                 .catch(err => console.log(err));
             scoreFormButton.innerHTML = "";
