@@ -164,7 +164,7 @@ header{
 }
 
 #highscores{
-    width: 300px;
+    width: 350px;
     padding: .5rem;
     display: flex;
     flex-direction: column;
@@ -179,7 +179,7 @@ header{
 }
 
 #highscores span{
-    width: 40%;
+    width: 50%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

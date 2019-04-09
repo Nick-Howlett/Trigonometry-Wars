@@ -8,6 +8,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  console.log(req);
   const newScore = new Score({name: req.body.name, score: req.body.score});
   newScore.save()
     .then(score => res.json(score))
