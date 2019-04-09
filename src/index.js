@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const soundButton = document.querySelector(".top-left");
     const audioContext = new AudioContext();
     const sounds = {};
+    scoreSubmitted = false;
     sounds.fire = document.getElementById('fire');
     sounds.fire.volume = 0.4;
     sounds.charge = document.getElementById('charge');
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
     let mute = true;
     let game;
-    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
+    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game, scoreSubmitted));
     play.forEach(button => {
         button.addEventListener("click", () => {
             game = new Game(canvas, ctx, gameOver, scoreOverlay, sounds, mute);
@@ -57,7 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
             axios.post('https://trigonometry-scores.herokuapp.com/api/scores', {name: playerName.value, score: game.score})
                 .then(() => {
                     formSubmit.value = "Score Submitted";
-                    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
+                    scoreSubmitted = true;
+                    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game, scoreSubmitted));
                 })
                 .catch(err => {
                     formSubmit.value = "Score Upload Failed";
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const updateScores = (scores, highScores, game) => {
     const scoreArray = scores.data;
-    if(game) scoreArray.push({name: "Your Score", score: game.score});
+    if(game && (!scoreSubmitted || game.score < scoreArray[scoreArray.length - 1].score)) scoreArray.push({name: "Your Score", score: game.score});
     scoreArray.sort((score1, score2) =>  score2.score - score1.score);
     highScores.innerHTML = "";
     scoreArray.forEach((score, i) => {
