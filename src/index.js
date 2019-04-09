@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const soundButton = document.querySelector(".top-left");
     const audioContext = new AudioContext();
     const sounds = {};
-    const scoreSubmitted = false;
+    let scoreSubmitted = false;
     sounds.fire = document.getElementById('fire');
     sounds.fire.volume = 0.4;
     sounds.charge = document.getElementById('charge');
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game, scoreSubmitted));
                 })
                 .catch(err => {
-                    formSubmit.value = "Score Upload Failed";
+                    formSubmit.value = "Score Upload Fail";
                 });
             formSubmit.value = "Submitting Score...";
         }
