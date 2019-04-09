@@ -52,7 +52,6 @@ header{
 .rules {
     top: 120px;
     width: 500px;
-    height: 300px;
 }
 .overlay{
     margin: 0 auto;
@@ -69,12 +68,12 @@ header{
 }
 
 #score{
-    margin-bottom: .5rem;
+    margin-top: .5rem;
+    margin-bottom: 1rem;
 }
 
 .game-over{
     width: 300px;
-    height: 200px;
 }
 
 .game-button{
@@ -189,4 +188,20 @@ header{
 
 #highscores span:nth-child(2n){
     text-align: right
+}
+
+#score-submit form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+#score-submit input{
+    border-radius: 4px;
+    outline: none;
+    font-size: 20px;
+    border: 1px solid grey;
+    height: 2rem;
+    margin-bottom: 1rem;
 }

@@ -76,7 +76,8 @@
             <div id="game-over" class="overlay gameover hidden">
                 <h2>Game Over!</h2>
                 <span id="score"></span>
-                <button class="game-button scoreboard">Scoreboard</button>
+                <button class="game-button score-submit">Record Score</button>
+                <button class="game-button scoreboard">High Scores</button>
                 <button class="game-button play-button">Play Again?</button>
             </div>
             <div id="scoreboard" class="overlay hidden">
@@ -84,6 +85,16 @@
                 <div id="highscores">
 
                 </div>
+                <button class="game-button score-submit">Record Score</button>
+                <button class="game-button play-button">Play Again?</button>
+            </div>
+            <div id="score-submit" class="overlay hidden">
+                <h2>Name</h2>
+                <form id="submit-form" action="https://trigonometry-scores.herokuapp.com/api/scores" method="post">
+                    <input id="player-name" required type="text"/>
+                    <input type="submit" class="game-button form-submit" value="Submit Score">
+                </form>
+                <button class="game-button scoreboard">High Scores</button> 
                 <button class="game-button play-button">Play Again?</button>
             </div>
             <div id="score-overlay">

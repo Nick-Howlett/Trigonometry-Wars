@@ -10,8 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const gameOver = document.getElementById('game-over');
     const scoreOverlay = document.getElementById('score-overlay');
     const scoreBoard = document.getElementById('scoreboard');
-    const scoreButton = document.querySelector('.scoreboard');
+    const scoreButton = document.querySelectorAll('.scoreboard');
+    const form = document.getElementById("submit-form");
+    const scoreForm = document.getElementById('score-submit');
     const highScores = document.getElementById('highscores');
+    const scoreFormButton = document.querySelectorAll('.score-submit');
+    const playerName = document.getElementById('player-name');
+    const formSubmit = document.querySelector('.form-submit');
     const play = Array.from(document.getElementsByClassName('play-button'));
     const soundButton = document.querySelector(".top-left");
     const audioContext = new AudioContext();
@@ -32,10 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
             canvas.className = "active";
         });
     });
-    scoreButton.addEventListener("click", () => {
-        axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores));
-        scoreBoard.classList = "overlay";
-        gameOver.classList = "overlay hidden";
+    scoreButton.forEach(button => {
+        button.addEventListener("click", () => {
+            axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores));
+            scoreBoard.classList = "overlay";
+            gameOver.classList = "overlay hidden";
+            scoreForm.classList = "overlay hidden";
+        });
+    });
+    scoreFormButton.forEach(button => {
+        button.addEventListener("click", () => {
+            scoreForm.classList = "overlay";
+            gameOver.classList = "overlay hidden";
+            scoreBoard.classList = "overlay hidden";
+        });
+    });
+    formSubmit.addEventListener("click", e => {
+        e.preventDefault();
+        if(form.reportValidity()){
+            const formData = new FormData();
+            formData.set('name', playerName.value);
+            formData.set('score', game.score);
+            axios.post('https://trigonometry-scores.herokuapp.com/api/scores', formData)
+                .then(res => console.log(res));
+        }
+    
     });
     const muteIcon = document.getElementById("mute");
     const soundIcon = document.getElementById("sound");
@@ -62,6 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const updateScores = (scores, highScores) => {
     const scoreArray = scores.data;
+    scoreArray.push({name: "Your Score", score: game.score});
+    scoreArray.sort((score1, score2) => score1.score - score2.score);
     highScores.innerHTML = "";
     scoreArray.forEach((score, i) => {
         const scoreNode = document.createElement('div');
