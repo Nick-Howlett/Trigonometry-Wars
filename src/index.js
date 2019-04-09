@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
     let mute = true;
     let game;
-    axios.get("https://nick-howlett.github.io/api/scores").then(scores => updateScores(scores, highScores, game));
+    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
     play.forEach(button => {
         button.addEventListener("click", () => {
             game = new Game(canvas, ctx, gameOver, scoreOverlay, sounds, mute);
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     scoreButton.forEach(button => {
         button.addEventListener("click", () => {
-            axios.get("https://nick-howlett.github.io/api/scores").then(scores => updateScores(scores, highScores, game));
+            axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
             scoreBoard.classList = "overlay";
             gameOver.classList = "overlay hidden";
             scoreForm.classList = "overlay hidden";
@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const formData = new FormData();
             formData.set('name', playerName.value);
             formData.set('score', game.score);
-            axios.post('https://nick-howlett.github.io/api/scores', {name: playerName.value, score: game.score})
-                .then(res => console.log(res))
+            axios.post('https://trigonometry-scores.herokuapp.com/api/scores', {name: playerName.value, score: game.score})
+                .then(axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game)))
                 .catch(err => console.log(err));    
         }
     
