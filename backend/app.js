@@ -10,7 +10,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 8000; // process.env accesses heroku's environment variables
 
 
-const whitelist = [`https://github.com/Nick-Howlett/Trigonometry-Wars`];
+const whitelist = [`https://nick-howlett.github.io`];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {

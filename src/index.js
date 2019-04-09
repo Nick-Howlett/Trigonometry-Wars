@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
     let mute = true;
     let game;
+    axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores));
     play.forEach(button => {
         button.addEventListener("click", () => {
             game = new Game(canvas, ctx, gameOver, scoreOverlay, sounds, mute);
@@ -32,20 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     scoreButton.addEventListener("click", () => {
-        axios.get("https://trigonometry-scores.herokuapp.com/api/scores")
-            .then(scores => {
-                const scoreArray = scores.data;
-                scoreArray.forEach(score => {
-                    const scoreNode = document.createElement('div');
-                    const scoreName = document.createElement('span');
-                    scoreName.appendChild(document.createTextNode(score.name));
-                    const scoreNum = document.createElement('span');
-                    scoreNum.appendChild(document.createTextNode(score.score));
-                    scoreNode.appendChild(scoreName);
-                    scoreNode.appendChild(scoreNum);
-                    highScores.appendChild(scoreNode);
-                });
-            });
+        axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores));
         scoreBoard.classList = "overlay";
         gameOver.classList = "overlay hidden";
     });
@@ -71,6 +59,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
+const updateScores = (scores, highScores) => {
+    const scoreArray = scores.data;
+    highScores.innerHTML = "";
+    scoreArray.forEach(score => {
+        const scoreNode = document.createElement('div');
+        const scoreName = document.createElement('span');
+        scoreName.appendChild(document.createTextNode(score.name));
+        const scoreNum = document.createElement('span');
+        scoreNum.appendChild(document.createTextNode(score.score));
+        scoreNode.appendChild(scoreName);
+        scoreNode.appendChild(scoreNum);
+        highScores.appendChild(scoreNode);
+    });
+};
 
 
 const drawBackground = (canvas) => {
