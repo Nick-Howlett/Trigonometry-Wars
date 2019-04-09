@@ -9,13 +9,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const gameOver = document.getElementById('game-over');
     const scoreOverlay = document.getElementById('score-overlay');
     const play = Array.from(document.getElementsByClassName('play-button'));
+    const audioContext = new AudioContext();
+    const sounds = {};
+    sounds.fire = document.getElementById('fire');
+    sounds.fire.volume = 0.4;
+    sounds.charge = document.getElementById('charge');
+    audioContext.createMediaElementSource(sounds.fire).connect(audioContext.destination);
+    audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
+    let mute = true;
+    let game;
     play.forEach(button => {
         button.addEventListener("click", () => {
-            const game = new Game(canvas, ctx, gameOver, scoreOverlay);
+            game = new Game(canvas, ctx, gameOver, scoreOverlay, sounds, mute);
             game.start();
             overlays.forEach(overlay => overlay.className = "overlay hidden");
             canvas.className = "active";
         });
+    });
+    const muteIcon = document.getElementById("mute");
+    const soundIcon = document.getElementById("sound");
+    document.addEventListener("keypress", e => {
+        if(e.key === "m" || e.key === "M"){
+            if(mute){
+                soundIcon.classList = "";
+                muteIcon.classList = "hidden";
+                mute = false;
+                game.unmute();
+            } else {
+                soundIcon.classList = "hidden";
+                muteIcon.classList = "";
+                mute = true;
+                game.mute();
+            }
+        }
     });
 });
 
