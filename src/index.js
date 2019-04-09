@@ -63,10 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
 const updateScores = (scores, highScores) => {
     const scoreArray = scores.data;
     highScores.innerHTML = "";
-    scoreArray.forEach(score => {
+    scoreArray.forEach((score, i) => {
         const scoreNode = document.createElement('div');
         const scoreName = document.createElement('span');
-        scoreName.appendChild(document.createTextNode(score.name));
+        scoreName.appendChild(document.createTextNode(`${i + 1}. ${score.name}`));
         const scoreNum = document.createElement('span');
         scoreNum.appendChild(document.createTextNode(score.score));
         scoreNode.appendChild(scoreName);
