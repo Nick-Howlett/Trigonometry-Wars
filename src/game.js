@@ -11,13 +11,13 @@ import { explode } from "./particles/explosions";
 
 
 class Game {
-    constructor(canvas, ctx, finishOverlay, scoreOverlay, sounds){
+    constructor(canvas, ctx, finishOverlay, scoreOverlay, sounds, muted){
         this.finishOverlay = finishOverlay;
         this.scoreOverlay = scoreOverlay;
         this.canvas = canvas;
         this.ctx = ctx;
         this.sounds = sounds;
-        this.is_muted = true;
+        this.is_muted = muted;
         this.dims = [canvas.width, canvas.height];
         this.edges = [new Line({x: 0, y: 0}, {x: canvas.width, y: 0}),
                       new Line({x: 0, y: 0}, {x: 0, y: canvas.width}),

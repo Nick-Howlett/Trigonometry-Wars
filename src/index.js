@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const gameOver = document.getElementById('game-over');
     const scoreOverlay = document.getElementById('score-overlay');
     const play = Array.from(document.getElementsByClassName('play-button'));
+    const soundButton = document.querySelector(".top-left");
     const audioContext = new AudioContext();
     const sounds = {};
     sounds.fire = document.getElementById('fire');
@@ -29,20 +30,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const muteIcon = document.getElementById("mute");
     const soundIcon = document.getElementById("sound");
     document.addEventListener("keypress", e => {
-        if(e.key === "m" || e.key === "M"){
-            if(mute){
-                soundIcon.classList = "";
-                muteIcon.classList = "hidden";
-                mute = false;
-                game.unmute();
-            } else {
-                soundIcon.classList = "hidden";
-                muteIcon.classList = "";
-                mute = true;
-                game.mute();
-            }
+        if(e.key === "m" || e.key === "M") {
+            toggleMute();
         }
+
     });
+    soundButton.addEventListener("click", e => toggleMute());
+    const toggleMute = () => {
+        if(mute){
+            soundIcon.classList = "";
+            muteIcon.classList = "hidden";
+            mute = false;
+            if(game) game.unmute();
+        } else {
+            soundIcon.classList = "hidden";
+            muteIcon.classList = "";
+            mute = true;
+            if(game) game.mute();
+        }
+    };
 });
 
 

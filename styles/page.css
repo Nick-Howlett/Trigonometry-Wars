@@ -61,7 +61,7 @@ header{
     font-size: 24px;
     background: white;
     border: 1px solid black;
-    border-radius: 4px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -144,6 +144,10 @@ header{
     justify-content: space-between;
     height: 50px;
     color: white;
+}
+
+.top-left:hover{
+    cursor: pointer;
 }
 
 
