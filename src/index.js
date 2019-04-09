@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             game.start();
             overlays.forEach(overlay => overlay.className = "overlay hidden");
             canvas.className = "active";
+            scoreSubmitted = false;
         });
     });
     scoreButton.forEach(button => {
@@ -91,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 });
 
-const updateScores = (scores, highScores, game) => {
+const updateScores = (scores, highScores, game, scoreSubmitted) => {
     const scoreArray = scores.data;
     if(game && (!scoreSubmitted || game.score < scoreArray[scoreArray.length - 1].score)) scoreArray.push({name: "Your Score", score: game.score});
     scoreArray.sort((score1, score2) =>  score2.score - score1.score);
