@@ -56,17 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if(form.reportValidity()){
             axios.post('https://trigonometry-scores.herokuapp.com/api/scores', {name: playerName.value, score: game.score})
                 .then(() => {
-                    formSubmit.innerHTML = "";
-                    console.log(formSubmit);
-                    formSubmit.appendChild(document.createTextNode("Score Submitted"));
+                    formSubmit.value = "Score Submitted";
                     axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
                 })
                 .catch(err => {
-                    formSubmit.innerHTML = "";
-                    formSubmit.appendChild(document.createTextNode("Score Upload Failed"));
+                    formSubmit.value = "Score Upload Failed";
                 });
-            formSubmit.innerHTML = "";
-            formSubmit.appendChild(document.createTextNode("Submitting Score..."));
+            formSubmit.value = "Submitting Score...";
         }
     
     });
