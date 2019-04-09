@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     scoreButton.forEach(button => {
         button.addEventListener("click", () => {
-            axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game));
             scoreBoard.classList = "overlay";
             gameOver.classList = "overlay hidden";
             scoreForm.classList = "overlay hidden";
