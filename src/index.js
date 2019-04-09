@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const formData = new FormData();
             formData.set('name', playerName.value);
             formData.set('score', game.score);
-            axios.post('https://trigonometry-scores.herokuapp.com/api/scores', formData)
+            axios({method: 'post', url: 'https://trigonometry-scores.herokuapp.com/api/scores', data: formData, config: { headers: {'Content-Type': 'multipart/form-data' }}}); 
                 .then(res => console.log(res));
         }
     
