@@ -10,6 +10,7 @@ import Obstacle from "./obstacle";
 import { explode } from "./particles/explosions";
 
 
+
 class Game {
     constructor(canvas, ctx, finishOverlay, scoreOverlay, sounds, muted){
         this.finishOverlay = finishOverlay;

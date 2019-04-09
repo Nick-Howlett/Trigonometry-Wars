@@ -1,4 +1,5 @@
 import Game from './game';
+const axios = require('axios');
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById("game-canvas");
@@ -8,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const overlays = Array.from(document.getElementsByClassName('overlay'));
     const gameOver = document.getElementById('game-over');
     const scoreOverlay = document.getElementById('score-overlay');
+    const scoreBoard = document.getElementById('scoreboard');
+    const scoreButton = document.querySelector('.scoreboard');
+    const highScores = document.getElementById('highscores');
     const play = Array.from(document.getElementsByClassName('play-button'));
     const soundButton = document.querySelector(".top-left");
     const audioContext = new AudioContext();
@@ -27,13 +31,30 @@ document.addEventListener("DOMContentLoaded", () => {
             canvas.className = "active";
         });
     });
+    scoreButton.addEventListener("click", () => {
+        axios.get("https://trigonometry-scores.herokuapp.com/api/scores")
+            .then(scores => {
+                const scoreArray = scores.data;
+                scoreArray.forEach(score => {
+                    const scoreNode = document.createElement('div');
+                    const scoreName = document.createElement('span');
+                    scoreName.appendChild(document.createTextNode(score.name));
+                    const scoreNum = document.createElement('span');
+                    scoreNum.appendChild(document.createTextNode(score.score));
+                    scoreNode.appendChild(scoreName);
+                    scoreNode.appendChild(scoreNum);
+                    highScores.appendChild(scoreNode);
+                });
+            });
+        scoreBoard.classList = "overlay";
+        gameOver.classList = "overlay hidden";
+    });
     const muteIcon = document.getElementById("mute");
     const soundIcon = document.getElementById("sound");
     document.addEventListener("keypress", e => {
         if(e.key === "m" || e.key === "M") {
             toggleMute();
         }
-
     });
     soundButton.addEventListener("click", e => toggleMute());
     const toggleMute = () => {
@@ -58,7 +79,7 @@ const drawBackground = (canvas) => {
     const ctx = canvas.getContext('2d');
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = "#00ff00";
-    ctx.lineWidth = .1;
+    ctx.lineWidth = 0.1;
     for(let i = 0; i < canvas.width; i += Math.floor(canvas.width / 12)){
         ctx.moveTo(i, 0);
         ctx.lineTo(i, height);
