@@ -42,6 +42,10 @@ class Laser {
         return this.duration > 5;
     }
 
+    is_collidable(){
+        return this.duration > 5;
+    }
+
     grow(factor){
         const current = this.vecs[this.vecs.length - 1];
         const point = current.p;
