@@ -1,5 +1,6 @@
 # Trigonometry-Wars
 Armed with a bouncing laser, defend as long as you can against endless enemies!
+[Play Now](https://nick-howlett.github.io/Trigonometry-Wars?utm_source=readme&medium=body)
 
 
 ## About
