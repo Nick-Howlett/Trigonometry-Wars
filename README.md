@@ -39,7 +39,7 @@ reflect(laserLine, reflectLine){
     return 1;
 }
 ```
-Much of the game's logic is written using a Vector class with methods such as normalize() and dot(secondVector), and the Line class, representing line segments with p and q instance methods for the beginning and end point of the line. Additionally, the laser class has a vecs array, used to store the line segments making up the laser's bounces.
+Much of the game's logic is written using a Vector class with methods such as ```normalize()``` and ```dot(secondVector)```, and the Line class, representing line segments with p and q instance variables for the beginning and end points of the line. These abstractions allow us to represent the actual laser portion of the Laser class as an array of Line objects, each a portion of the laser which we can ```vectorize()``` if we need to perform calculations.
 By using these classes we can write the actual equation of reflection, r = d − 2(d ⋅ n)n as a series of vector methods, then it's simply a matter of creating a new line segment from the last line segment's endpoint using the new vector, and adding it to the Laser instance's array of line segments.
 As a final element to the function we offset the starting point of the new reflection line by that line's unit vector so it doesn't share a point of intersection with the reflected surface. Without this offset, the collision algorithm would immediately detect this line as colliding with the same surface as before, and performing an erroneous reflection.
  
