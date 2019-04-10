@@ -6,30 +6,95 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href='styles/page.css'>
         <link href="https://fonts.googleapis.com/css?family=Iceland" rel="stylesheet">
-        <title>Game</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <title>Trigonometry Wars</title>
         <script src="dist/main.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137274645-1"></script>
+        <audio id="fire" src="sound/fire.wav" type="audio/mpeg"></audio>
+        <audio id="charge"src="sound/chargeup.mp3" type="audio/mpeg"></audio>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-137274645-1');
+        </script>
     </head>
     <body>
+        <div class='top-bar'>
+            <div class="top-left">
+                <span id="sound" class='hidden'><i class="fas fa-2x fa-volume-up"></i></span>
+                <span id="mute"><i class="fas fa-2x fa-volume-mute"></i></span>
+            </div>
+            <div class="top-right">
+                <a href="https://www.linkedin.com/in/nick-howlett/"><i class="fab fa-3x fa-linkedin"></i></a>
+                <a href="https://github.com/Nick-Howlett?tab=repositories"><i class="fab fa-3x fa-github"></i></a>
+            </div>
+        </div>
         <header>
                 <h1>Trigonometry Wars</h1>
         </header>
         <div id="canvas-container">
+            <div class="canvas-side">
+                <div class="controls">
+                    <div class="control">
+                        Hold
+                        <div class="key">W</div> to move
+                    </div>
+                    <div class="control">
+                        Move the mouse to control direction
+                    </div>
+                    <div class="control">
+                        Hold
+                        <img width=64 height=64 src="images/left-mouse.svg"/> or
+                        <div class="key space">Space</div> to charge <br>
+                 
+                    </div>
+                    <div class='control'>
+                        Release when charged to fire
+                    </div>
+                    <div class='control'>
+                           <div class="key">M</div> or click top left icon to toggle sound
+                    </div>
+                </div>
+            </div>
             <canvas id="game-canvas" height="600" width="900"></canvas>
             <canvas id="background-canvas" height="600" width="900"></canvas>
+            <div class="canvas-side">
+                
+            </div>
             <div class="overlay rules">
                 <h2>Welcome to Trigonometry Wars!</h2>
                 <p>
                     Enemies will come at you from all sides of the screen <br>
-                    <b>survive as long as you can!</b> <br>
-                    <span class="highlight">Hold W</span> to move forward and <span class="highlight">move the mouse</span> to turn the player <br>
-                    <span class="highlight">Hold left click</span> to charge your laser and <span class="highlight">release to fire</span> <br>
-                    Your laser will bounce off the walls. If you hit an enemy on a later bounce you will receive bonus points. <br>
+                    <b>survive as long as you can to get the high score!</b> <br>
+                    You can only move and fire forwards, but your laser will bounce off the walls and obstacles, allowing you to hit enemies behind you.
+                    If you hit an enemy on a later bounce you will receive bonus points!<br>
                 </p>
                 <button class="game-button play-button">Play</button>
             </div>
             <div id="game-over" class="overlay gameover hidden">
                 <h2>Game Over!</h2>
                 <span id="score"></span>
+                <button class="game-button score-submit">Record Score</button>
+                <button class="game-button scoreboard">High Scores</button>
+                <button class="game-button play-button">Play Again?</button>
+            </div>
+            <div id="scoreboard" class="overlay hidden">
+                <h2>High Scores</h2>
+                <div id="highscores">
+
+                </div>
+                <button class="game-button score-submit">Record Score</button>
+                <button class="game-button play-button">Play Again?</button>
+            </div>
+            <div id="score-submit" class="overlay hidden">
+                <h2>Name</h2>
+                <form id="submit-form" action="https://trigonometry-scores.herokuapp.com/api/scores" method="post">
+                    <input id="player-name" required type="text"/>
+                    <input type="submit" class="game-button form-submit" value="Submit Score">
+                </form>
+                <button class="game-button scoreboard">High Scores</button> 
                 <button class="game-button play-button">Play Again?</button>
             </div>
             <div id="score-overlay">

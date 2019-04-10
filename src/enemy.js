@@ -16,12 +16,11 @@ class Enemy extends MovingObject{
     return false;
   }
 
-  reroute(collidedEdge, playerPos){
-    const opposite = calculateVector(-this.direc, 1);
+  reroute(collidedEdge, playerPos, ctx){
     const vec1 = collidedEdge.vectorize().normalize();
     const vec2 = new Vector(collidedEdge.q, collidedEdge.p).normalize();
-    const pos1 = {x: this.pos.x + vec1.x + opposite.x, y: this.pos.y + vec2.y + opposite.y};
-    const pos2 = {x: this.pos.x + vec2.x + opposite.x, y: this.pos.y + vec2.y + opposite.y};
+    const pos1 = {x: this.pos.x + vec1.x, y: this.pos.y + vec1.y};
+    const pos2 = {x: this.pos.x + vec2.x, y: this.pos.y + vec2.y};
     if(calculateDistance(pos1, playerPos) > calculateDistance(pos2, playerPos))
       this.pos = pos2;
     else{

@@ -50,18 +50,17 @@ header{
 }
 
 .rules {
-    top: 100px;
-    width: 630px;
-    height: 350px;
+    top: 120px;
+    width: 500px;
 }
 .overlay{
     margin: 0 auto;
     position: absolute;
     padding: 20px 20px; 
     font-size: 24px;
-    background: grey;
+    background: white;
     border: 1px solid black;
-    border-radius: 4px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -69,12 +68,12 @@ header{
 }
 
 #score{
-    margin-bottom: .5rem;
+    margin-top: .5rem;
+    margin-bottom: 1rem;
 }
 
 .game-over{
-    width: 250px;
-    height: 150px;
+    width: 300px;
 }
 
 .game-button{
@@ -83,6 +82,7 @@ header{
     border-radius: 4px;
     border: 1px solid black;
     font-size: 25px;
+    margin-bottom: .5rem;
     cursor: pointer;
     outline: none;
     box-shadow: 6px 6px 15px -6px rgba(0,0,0,0.75);
@@ -93,6 +93,7 @@ header{
     top: 2px;
     left: 2px;
     box-shadow: none;
+  
 }
 
 #score-overlay{
@@ -104,4 +105,103 @@ header{
 
 .hidden{
     display: none;
+}
+
+.canvas-side{
+    width: calc((100vw - 902px) / 2);
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    fill: white;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.control{
+    width: 100%;
+    display: flex;
+    text-align: center;
+    font-size: 20px;
+    align-items: center;
+    margin-top: 1em;
+    flex-wrap: wrap;
+}
+
+.key{
+    border: 1px solid white;
+    border-radius: 6px;
+    padding: .4em .5em;
+    margin: .5rem;
+}
+
+.space{
+    padding: .4em 1em;
+}
+
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    color: white;
+}
+
+.top-left:hover{
+    cursor: pointer;
+}
+
+
+
+.top-right a{
+    color: white;
+    fill: white;
+    margin-right: 1em;
+}
+
+.top-right a:hover{
+    color: #d9d9d9;
+}
+
+#highscores{
+    width: 350px;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: .75rem;
+}
+
+#highscores div{
+    display: flex;
+    justify-content: space-between;
+    width: 75%
+}
+
+#highscores span{
+    width: 50%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+
+#highscores span:nth-child(2n){
+    text-align: right
+}
+
+#score-submit form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+#score-submit input{
+    border-radius: 4px;
+    outline: none;
+    font-size: 20px;
+    border: 1px solid grey;
+    height: 2rem;
+    margin-bottom: 1rem;
 }

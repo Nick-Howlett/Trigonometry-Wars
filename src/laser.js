@@ -8,7 +8,7 @@ class Laser {
         this.theta = theta;
         this.reflections = 4;
         const vec = calculateVector(theta, -100);
-        this.vecs = [new Line(this.pos, {x: this.pos.x + vec.x, y: this.pos.y + vec.y})];     
+        this.vecs = [new Line(this.pos, {x: this.pos.x + vec.x, y: this.pos.y + vec.y})];  
     }   
 
     is_finished(){
@@ -38,6 +38,10 @@ class Laser {
         return 1;
     }
 
+    is_collidable(){
+        return this.duration > 5;
+    }
+
     grow(factor){
         const current = this.vecs[this.vecs.length - 1];
         const point = current.p;
@@ -54,6 +58,7 @@ class Laser {
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.shadowBlur = 5;
+        if(this.duration <= 10) ctx.globalAlpha = 1 - (10 - this.duration)/10;
         this.vecs.forEach(vector => {
             ctx.moveTo(vector.p.x, vector.p.y);
             ctx.lineTo(vector.q.x, vector.q.y);

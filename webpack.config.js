@@ -4,6 +4,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '*']
   },
+  mode: 'production',
   module: {
     rules: [
       {

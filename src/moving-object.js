@@ -23,13 +23,15 @@ class MovingObject {
     const vec = calculateVector(this.direc, this.vel);
     this.pos.x += vec.x;
     this.pos.y += vec.y;
+    const ret = [];
     for(let i = 0; i < edges.length; i++){
       if(this.is_collided(edges[i])){
         this.pos.x -= vec.x;
         this.pos.y -= vec.y;
-        return edges[i];
+        ret.push(edges[i]);
       }
     }
+    return ret;
   }
 } 
 
