@@ -149,10 +149,8 @@ class Game {
                 entity.rotate(calculateTheta(this.player.pos, entity.pos));
             const edges = aggregateEdges(...this.obstacles);
             const collidedEdges = entity.move(edges);
-            if(collidedEdges && entity !== this.player){
-                collidedEdges.forEach(edge => {
-                    entity.reroute(edge, this.player.pos);
-                });
+            if(collidedEdges.length > 0 && entity !== this.player){
+                entity.reroute(collidedEdges, this.player.pos, this.ctx);
             }
         });
         this.particles.forEach(particle => {

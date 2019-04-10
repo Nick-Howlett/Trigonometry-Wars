@@ -35,6 +35,12 @@ export default class Vector {
     return this;
   }
 
+  add(vec){
+    this.x += vec.x;
+    this.y += vec.y;
+    return this;
+  }
+
   cross(vec){
     return this.x * vec.y - this.y * vec.x;
   } 

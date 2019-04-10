@@ -30,14 +30,15 @@ class Laser {
         const reflectVec = laserVec.subtract(norm.scale(2 * (laserVec.dot(norm))));
         const currentVec = this.vecs[this.vecs.length - 1];
         const newLine = reflectVec.createLine(currentVec.q);
-        const laserNormalized = reflectVec.normalize();
-        newLine.p.x += laserNormalized.x;
-        newLine.p.y += laserNormalized.y;
+        //translate the reflection point so it isn't directly on the reflected surface
+        const offset = reflectVec.normalize();
+        newLine.p.x += offset.x;
+        newLine.p.y += offset.y;
         this.vecs.push(newLine);
         this.reflections--;
         return 1;
     }
-    
+
     is_collidable(){
         return this.duration > this.duration - (this.duration - 5);
     }

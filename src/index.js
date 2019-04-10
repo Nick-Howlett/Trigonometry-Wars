@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const soundButton = document.querySelector(".top-left");
     const sounds = {};
     let scoreSubmitted = false;
+    let audioContext;
     sounds.fire = document.getElementById('fire');
     sounds.fire.volume = 0.4;
     sounds.charge = document.getElementById('charge');
@@ -29,9 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
     axios.get("https://trigonometry-scores.herokuapp.com/api/scores").then(scores => updateScores(scores, highScores, game, scoreSubmitted));
     play.forEach(button => {
         button.addEventListener("click", () => {
-            const audioContext = new AudioContext();
-            audioContext.createMediaElementSource(sounds.fire).connect(audioContext.destination);
-            audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
+            if(!audioContext){
+                audioContext = new AudioContext();
+                audioContext.createMediaElementSource(sounds.fire).connect(audioContext.destination);
+                audioContext.createMediaElementSource(sounds.charge).connect(audioContext.destination);
+            }
             game = new Game(canvas, ctx, gameOver, scoreOverlay, sounds, mute);
             game.start();
             overlays.forEach(overlay => overlay.className = "overlay hidden");
