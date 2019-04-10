@@ -81,7 +81,7 @@ class Game {
                     if(lineCircleCollision(vector, enemy.pos, enemy.radius)){
                         this.particles = this.particles.concat(explode(enemy.pos));
                         delete this.entities[this.entities.indexOf(enemy)];
-                        this.score += 100 * (i + 1);
+                        this.score += 100 + (100 * i * 2);
                     }
                     pos = vector;
                 });
@@ -122,7 +122,7 @@ class Game {
                 this.player.discharge(); 
             }
         } else if(this.keys.Space || this.keys.Mouse){
-            const chargeTime = 500;
+            const chargeTime = 1000;
             let i = 0;
             if(!this.is_muted){
                 this.sounds.charge.load();

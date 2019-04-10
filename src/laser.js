@@ -37,13 +37,9 @@ class Laser {
         this.reflections--;
         return 1;
     }
-
+    
     is_collidable(){
-        return this.duration > 5;
-    }
-
-    is_collidable(){
-        return this.duration > 5;
+        return this.duration > this.duration - (this.duration - 5);
     }
 
     grow(factor){
