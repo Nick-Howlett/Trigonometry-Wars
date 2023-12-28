@@ -1,11 +1,13 @@
 # Simple Node API Backend
 
 Simple Node Backend for avoiding CORS issues in development
+
 - npm install
 - npm run build
 - npm start
 
 Technologies
+
 - express
 - axios
 - webpack
@@ -18,4 +20,4 @@ app.js contains the routes that you need to get your data. Customize them accord
 
 Write your JS in the javascripts folder; your entry file is index.js.
 
-In the entry file 
+In the entry file

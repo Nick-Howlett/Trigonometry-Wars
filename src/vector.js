@@ -1,53 +1,53 @@
-import Line from './line';
-
+import Line from "./line";
 
 export default class Vector {
-  constructor(p, q){
+  constructor(p, q) {
     this.x = q.x - p.x;
     this.y = q.y - p.y;
     this.coords = [this.x, this.y];
   }
 
-  createLine(point){
-    return new Line({x: point.x, y: point.y}, {x: point.x + this.x, y: point.y + this.y});
+  createLine(point) {
+    return new Line(
+      { x: point.x, y: point.y },
+      { x: point.x + this.x, y: point.y + this.y },
+    );
   }
 
-  dot(vec){ 
-    return (this.x * vec.x) + (this.y * vec.y);
+  dot(vec) {
+    return this.x * vec.x + this.y * vec.y;
   }
 
-  scale(scalar){
+  scale(scalar) {
     this.x *= scalar;
     this.y *= scalar;
     return this;
   }
 
-  normalize(){
+  normalize() {
     const mag = this.magnitude();
     this.x /= mag;
     this.y /= mag;
     return this;
   }
 
-  subtract(vec){
+  subtract(vec) {
     this.x -= vec.x;
     this.y -= vec.y;
     return this;
   }
 
-  add(vec){
+  add(vec) {
     this.x += vec.x;
     this.y += vec.y;
     return this;
   }
 
-  cross(vec){
+  cross(vec) {
     return this.x * vec.y - this.y * vec.x;
-  } 
-
-  magnitude(){
-    return Math.sqrt(this.x**2 + this.y**2);
   }
-  
-}
 
+  magnitude() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
+  }
+}
