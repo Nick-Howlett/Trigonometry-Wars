@@ -2,8 +2,9 @@ const path = require('path');
 
 module.exports = {
   resolve: {
-    extensions: ['.js', '*']
+    extensions: ['.js', '.ts']
   },
+  devtool: "source-map",
   mode: 'production',
   module: {
     rules: [
@@ -13,7 +14,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
-      }
+      },
+      { test: /\.tsx?$/, loader: "ts-loader" },
     ]
   }
 };

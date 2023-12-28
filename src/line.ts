@@ -1,7 +1,11 @@
+import type Point from './point';
 import Vector from './vector';
 
-export default class line {
-  constructor(p, q){
+export default class Line {
+  p: Point;
+  q: Point;
+
+  constructor(p: Point, q: Point){
     this.p = p;
     this.q = q;
   }
@@ -17,6 +21,4 @@ export default class line {
   vectorize(){
     return new Vector(this.p, this.q);
   }
-
-
 }
