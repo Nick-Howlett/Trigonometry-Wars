@@ -1,13 +1,19 @@
+import Line from "./line";
+import Point from "./point";
 import { calculateVector } from "./utils";
 
 class MovingObject {
-  constructor(pos, vel, direc) {
+  pos: Point;
+  vel: number;
+  direc: number;
+
+  constructor(pos: Point, vel: number, direc: number) {
     this.pos = pos;
     this.vel = vel;
     this.direc = direc;
   }
 
-  accelerate(accel) {
+  accelerate(accel: number) {
     this.vel = accel;
   }
 
@@ -15,11 +21,16 @@ class MovingObject {
     this.vel = 0;
   }
 
-  rotate(rot) {
+  rotate(rot: number) {
     this.direc = rot;
   }
 
-  move(edges) {
+  is_collided(line: Line): boolean {
+    // implemented in parent
+    return false;
+  }
+
+  move(edges: Line[]) {
     const vec = calculateVector(this.direc, this.vel);
     this.pos.x += vec.x;
     this.pos.y += vec.y;
