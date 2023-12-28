@@ -1,13 +1,18 @@
 import Line from "./line";
+import Point from "./point";
 
 export default class Obstacle {
-  constructor(pos) {
+  pos: Point;
+  points: Point[];
+  lines: Line[];
+
+  constructor(pos: Point) {
     this.pos = pos;
     this.points = this.createPoints();
     this.lines = this.createLines();
   }
 
-  createPoints() {
+  createPoints(): Point[] {
     const x = this.pos.x;
     const y = this.pos.y;
     return [
@@ -18,7 +23,7 @@ export default class Obstacle {
     ];
   }
 
-  createLines() {
+  createLines(): Line[] {
     const lines = [];
     for (let i = 0; i < this.points.length - 1; i++) {
       lines.push(new Line(this.points[i], this.points[i + 1]));
@@ -27,7 +32,7 @@ export default class Obstacle {
     return lines;
   }
 
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.save();
     ctx.fillStyle = "#D0D0D0";
     ctx.beginPath();

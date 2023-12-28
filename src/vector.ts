@@ -12,47 +12,47 @@ export default class Vector {
     this.coords = [this.x, this.y];
   }
 
-  createLine(point: Point) {
+  createLine(point: Point): Line {
     return new Line(
       { x: point.x, y: point.y },
       { x: point.x + this.x, y: point.y + this.y },
     );
   }
 
-  dot(vec: Vector) {
+  dot(vec: Vector): number {
     return this.x * vec.x + this.y * vec.y;
   }
 
-  scale(scalar: number) {
+  scale(scalar: number): Vector {
     this.x *= scalar;
     this.y *= scalar;
     return this;
   }
 
-  normalize() {
+  normalize(): Vector {
     const mag = this.magnitude();
     this.x /= mag;
     this.y /= mag;
     return this;
   }
 
-  subtract(vec: Vector) {
+  subtract(vec: Vector): Vector {
     this.x -= vec.x;
     this.y -= vec.y;
     return this;
   }
 
-  add(vec: Vector) {
+  add(vec: Vector): Vector {
     this.x += vec.x;
     this.y += vec.y;
     return this;
   }
 
-  cross(vec: Vector) {
+  cross(vec: Vector): number {
     return this.x * vec.y - this.y * vec.x;
   }
 
-  magnitude() {
+  magnitude(): number {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
 }

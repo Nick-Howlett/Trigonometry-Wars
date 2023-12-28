@@ -10,18 +10,18 @@ export default class Line {
     this.q = q;
   }
 
-  len() {
+  len(): number {
     return Math.sqrt((this.p.x - this.q.x) ** 2 + (this.p.y - this.q.y) ** 2);
   }
 
-  normalVec() {
+  normalVec(): Vector {
     return new Vector(
       { x: 0, y: 0 },
       { x: -(this.q.y - this.p.y), y: this.q.x - this.p.x },
     );
   }
 
-  vectorize() {
+  vectorize(): Vector {
     return new Vector(this.p, this.q);
   }
 }
