@@ -1,8 +1,15 @@
 import { calculateVector } from "./utils";
 import Line from "./line";
+import Point from "./point";
 
 class Laser {
-  constructor(pos, theta) {
+  pos: Point;
+  duration: number;
+  theta: number;
+  reflections: number;
+  vecs: Line[];
+
+  constructor(pos: Point, theta: number) {
     this.pos = pos;
     this.duration = 20;
     this.theta = theta;
@@ -13,15 +20,15 @@ class Laser {
     ];
   }
 
-  is_finished() {
+  isFinished(): boolean {
     return this.duration <= 0;
   }
 
-  fade() {
+  fade(): void {
     this.duration--;
   }
 
-  reflect(laserLine, reflectLine) {
+  reflect(laserLine: Line, reflectLine: Line): void {
     if (this.reflections === 0) {
       this.duration = Math.min(this.duration, 12);
       return; //stop if we are out of reflections
@@ -37,14 +44,13 @@ class Laser {
     newLine.p.y += offset.y;
     this.vecs.push(newLine);
     this.reflections--;
-    return 1;
   }
 
-  is_collidable() {
+  isCollidable(): boolean {
     return this.duration > this.duration - (this.duration - 5);
   }
 
-  grow(factor) {
+  grow(factor: number): Line {
     const current = this.vecs[this.vecs.length - 1];
     const point = current.p;
     this.vecs[this.vecs.length - 1] = current
@@ -54,7 +60,7 @@ class Laser {
     return this.vecs[this.vecs.length - 1];
   }
 
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.save();
     ctx.beginPath();
     ctx.lineWidth = 3;

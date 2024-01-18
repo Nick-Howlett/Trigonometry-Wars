@@ -85,7 +85,7 @@ class Game {
   check_collisions() {
     const edges = aggregateEdges(this.player, ...this.obstacles);
     let t, edge;
-    if (this.laser && this.laser.is_collidable()) {
+    if (this.laser && this.laser.isCollidable()) {
       let laser = this.laser.vecs[this.laser.vecs.length - 1];
       [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
     }
@@ -166,7 +166,7 @@ class Game {
     if (this.laser) {
       this.laser.grow(3);
       this.laser.fade();
-      if (this.laser.is_finished()) this.laser = null;
+      if (this.laser.isFinished()) this.laser = null;
     }
     this.entities.forEach((entity) => {
       if (entity === this.player)
