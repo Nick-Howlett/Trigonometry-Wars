@@ -1,35 +1,100 @@
 import Game from "./game";
+import { Score } from "./types/backend";
+import {
+  assertElement,
+  assertNonNull,
+  updateClass,
+} from "./utils/dom-manuipulation.utils";
+import {
+  elementIsAudio,
+  elementIsCanvas,
+  elementIsForm,
+  elementIsInput,
+} from "./utils/typeguards.utils";
 const axios = require("axios");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("game-canvas");
-  const background = document.getElementById("background-canvas");
+  const canvas: HTMLCanvasElement = assertElement(
+    document.getElementById("game-canvas"),
+    elementIsCanvas,
+    "Main canvas",
+  );
+  const background: HTMLCanvasElement = assertElement(
+    document.getElementById("background-canvas"),
+    elementIsCanvas,
+    "Background canvas",
+  );
   drawBackground(background);
   const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    throw new Error("Missing 2d context for main canvas");
+  }
+
   const overlays = Array.from(document.getElementsByClassName("overlay"));
-  const gameOver = document.getElementById("game-over");
+  const gameOver = assertNonNull(
+    document.getElementById("game-over"),
+    "Game over screen",
+  );
   const scoreOverlay = document.getElementById("score-overlay");
-  const scoreBoard = document.getElementById("scoreboard");
+  const scoreBoard = assertNonNull(
+    document.getElementById("scoreboard"),
+    "Scoreboard",
+  );
   const scoreButton = document.querySelectorAll(".scoreboard");
-  const form = document.getElementById("submit-form");
-  const scoreForm = document.getElementById("score-submit");
-  const highScores = document.getElementById("highscores");
+  const form = assertElement(
+    document.getElementById("submit-form"),
+    elementIsForm,
+    "Submission form",
+  );
+  const scoreForm = assertNonNull(
+    document.getElementById("score-submit"),
+    "Score form",
+  );
+  const highScores = assertNonNull(
+    document.getElementById("highscores"),
+    "High score list",
+  );
   const scoreFormButton = document.querySelectorAll(".score-submit");
-  const playerName = document.getElementById("player-name");
-  const formSubmit = document.querySelector(".form-submit");
+  const playerName = assertElement(
+    document.getElementById("player-name"),
+    elementIsInput,
+    "Player name field",
+  );
+  const formSubmit = assertElement(
+    document.querySelector(".form-submit"),
+    elementIsInput,
+    "Form submit",
+  );
   const play = Array.from(document.getElementsByClassName("play-button"));
-  const soundButton = document.querySelector(".top-left");
-  const sounds = {};
+  const soundButton = assertElement(
+    document.querySelector(".top-left"),
+    elementIsInput,
+    "Mute button",
+  );
   let scoreSubmitted = false;
-  let audioContext;
-  sounds.fire = document.getElementById("fire");
+  let audioContext: AudioContext;
+  const sounds: { fire: HTMLAudioElement; charge: HTMLAudioElement } = {
+    fire: assertElement(
+      document.getElementById("fire"),
+      elementIsAudio,
+      "Fire sound",
+    ),
+    charge: assertElement(
+      document.getElementById("charge"),
+      elementIsAudio,
+      "Charge sound",
+    ),
+  };
   sounds.fire.volume = 0.4;
-  sounds.charge = document.getElementById("charge");
+
   let mute = true;
-  let game;
+  let game: Game;
   axios
     .get("https://trigonometry-scores.herokuapp.com/api/scores")
-    .then((scores) => updateScores(scores, highScores, game, scoreSubmitted));
+    .then((scores: { data: Score[] }) =>
+      updateScores(scores, highScores, game, scoreSubmitted),
+    );
   play.forEach((button) => {
     button.addEventListener("click", () => {
       if (!audioContext) {
@@ -51,16 +116,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   scoreButton.forEach((button) => {
     button.addEventListener("click", () => {
-      scoreBoard.classList = "overlay";
-      gameOver.classList = "overlay hidden";
-      scoreForm.classList = "overlay hidden";
+      updateClass(scoreBoard, "overlay");
+      updateClass(gameOver, "overlay hidden");
+      updateClass(scoreForm, "overlay hidden");
     });
   });
   scoreFormButton.forEach((button) => {
     button.addEventListener("click", () => {
-      scoreForm.classList = "overlay";
-      gameOver.classList = "overlay hidden";
-      scoreBoard.classList = "overlay hidden";
+      updateClass(scoreForm, "overlay");
+      updateClass(gameOver, "overlay hidden");
+      updateClass(scoreBoard, "overlay hidden");
     });
   });
   formSubmit.addEventListener("click", (e) => {
@@ -76,18 +141,21 @@ document.addEventListener("DOMContentLoaded", () => {
           scoreSubmitted = true;
           axios
             .get("https://trigonometry-scores.herokuapp.com/api/scores")
-            .then((scores) =>
+            .then((scores: { data: Score[] }) =>
               updateScores(scores, highScores, game, scoreSubmitted),
             );
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           formSubmit.value = "Score Upload Fail";
         });
       formSubmit.value = "Submitting Score...";
     }
   });
-  const muteIcon = document.getElementById("mute");
-  const soundIcon = document.getElementById("sound");
+  const muteIcon = assertNonNull(document.getElementById("mute"), "Mute icon");
+  const soundIcon = assertNonNull(
+    document.getElementById("sound"),
+    "Sound icon",
+  );
   document.addEventListener("keypress", (e) => {
     if (e.key === "m" || e.key === "M") {
       toggleMute();
@@ -96,20 +164,25 @@ document.addEventListener("DOMContentLoaded", () => {
   soundButton.addEventListener("click", (e) => toggleMute());
   const toggleMute = () => {
     if (mute) {
-      soundIcon.classList = "";
-      muteIcon.classList = "hidden";
+      updateClass(soundIcon, "");
+      updateClass(muteIcon, "hidden");
       mute = false;
       if (game) game.unmute();
     } else {
-      soundIcon.classList = "hidden";
-      muteIcon.classList = "";
+      updateClass(soundIcon, "hidden");
+      updateClass(muteIcon, "");
       mute = true;
       if (game) game.mute();
     }
   };
 });
 
-const updateScores = (scores, highScores, game, scoreSubmitted) => {
+const updateScores = (
+  scores: { data: Score[] },
+  highScores: HTMLElement,
+  game: Game,
+  scoreSubmitted: boolean,
+) => {
   const scoreArray = scores.data;
   if (
     game &&
@@ -123,17 +196,22 @@ const updateScores = (scores, highScores, game, scoreSubmitted) => {
     const scoreName = document.createElement("span");
     scoreName.appendChild(document.createTextNode(`${i + 1}. ${score.name}`));
     const scoreNum = document.createElement("span");
-    scoreNum.appendChild(document.createTextNode(score.score));
+    scoreNum.appendChild(document.createTextNode(String(score.score)));
     scoreNode.appendChild(scoreName);
     scoreNode.appendChild(scoreNum);
     highScores.appendChild(scoreNode);
   });
 };
 
-const drawBackground = (canvas) => {
+const drawBackground = (canvas: HTMLCanvasElement): void => {
   const width = canvas.width;
   const height = canvas.height;
   const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    return;
+  }
+
   ctx.fillRect(0, 0, width, height);
   ctx.strokeStyle = "#00ff00";
   ctx.lineWidth = 0.1;

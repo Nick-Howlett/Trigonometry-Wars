@@ -1,10 +1,5 @@
 import Player from "./player";
-import {
-  calculateTheta,
-  aggregateEdges,
-  calculateVector,
-  entityIsEnemy,
-} from "./utils";
+import { calculateTheta, aggregateEdges, calculateVector } from "./utils";
 import { lineCircleCollision, bestLaserCollision } from "./collisions";
 import Line from "./line";
 import Cursor from "./cursor";
@@ -15,11 +10,12 @@ import Obstacle from "./obstacle";
 import { explode } from "./particles/explosions";
 import Enemy from "./enemy";
 import Spark from "./particles/spark";
+import { entityIsEnemy } from "./utils/typeguards.utils";
 
 class Game {
   canvas: HTMLCanvasElement;
-  finishOverlay: HTMLElement;
-  scoreOverlay: HTMLElement;
+  finishOverlay: HTMLElement | null;
+  scoreOverlay: HTMLElement | null;
   ctx: CanvasRenderingContext2D;
   sounds: { fire: HTMLAudioElement; charge: HTMLAudioElement };
   isMuted: boolean;
@@ -40,8 +36,8 @@ class Game {
   constructor(
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
-    finishOverlay: HTMLElement,
-    scoreOverlay: HTMLElement,
+    finishOverlay: HTMLElement | null,
+    scoreOverlay: HTMLElement | null,
     sounds: { fire: HTMLAudioElement; charge: HTMLAudioElement },
     muted: boolean,
   ) {
@@ -121,6 +117,11 @@ class Game {
   gameOver() {
     this.intervals.forEach((interval) => clearInterval(interval));
     this.canvas.className = "inactive";
+
+    if (!this.finishOverlay) {
+      throw new Error("Finish overlay not found");
+    }
+
     this.finishOverlay.className = "overlay game-over";
     const scoreSpan = document.getElementById("score");
 
@@ -169,6 +170,9 @@ class Game {
   }
 
   render() {
+    if (!this.scoreOverlay) {
+      throw new Error("Score overlay not found");
+    }
     this.scoreOverlay.innerHTML = `${this.displayScore}`;
     this.ctx.clearRect(0, 0, this.dims.width, this.dims.height);
     if (this.laser) this.laser.draw(this.ctx);

@@ -56,9 +56,7 @@ export const aggregateEdges = <T>(...edgeCollections: LinedEntity<T>[]) => {
   return ret;
 };
 
-export const entityIsEnemy = (entity: Player | Enemy): entity is Enemy => {
-  return !!(entity as Enemy).reroute;
-};
+
 
 export const randInt = (max: number): number => {
   return Math.floor(Math.random() * max);
