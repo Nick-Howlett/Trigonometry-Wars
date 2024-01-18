@@ -25,7 +25,7 @@ class MovingObject {
     this.direc = rot;
   }
 
-  is_collided(line: Line): boolean {
+  isCollided(line: Line): boolean {
     // implemented in parent
     return false;
   }
@@ -36,7 +36,7 @@ class MovingObject {
     this.pos.y += vec.y;
     const ret = [];
     for (let i = 0; i < edges.length; i++) {
-      if (this.is_collided(edges[i])) {
+      if (this.isCollided(edges[i])) {
         this.pos.x -= vec.x;
         this.pos.y -= vec.y;
         ret.push(edges[i]);

@@ -108,7 +108,7 @@ class Game {
           pos = vector;
         });
       }
-      if (this.player.is_collided(enemy)) this.gameOver();
+      if (this.player.isCollided(enemy)) this.gameOver();
     });
   }
 

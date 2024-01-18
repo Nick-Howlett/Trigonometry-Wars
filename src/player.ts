@@ -3,9 +3,17 @@ import Line from "./line";
 import Vector from "./vector";
 import { rotatePoint } from "./utils";
 import { lineLineCollision, lineCircleCollision } from "./collisions";
+import Point from "./point";
+import Enemy from "./enemy";
 
 class Player extends MovingObject {
-  constructor(pos, vel, direc) {
+  radius: number;
+  points: [Point, Point, Point];
+  charge: number;
+  lines: Line[];
+  chargeLines: Line[];
+
+  constructor(pos: Point, vel: number, direc: number) {
     super(pos, vel, direc);
     this.radius = 10;
     this.points = [
@@ -14,10 +22,13 @@ class Player extends MovingObject {
       { x: 10, y: 4 },
     ];
     this.charge = 0;
+    this.lines = [];
+    this.chargeLines = [];
     this.calculateLines();
   }
 
-  is_collided(collider) {
+  // reassess type after creating some base classes and use type guard
+  isCollided(collider: any): boolean {
     if (collider.pos) {
       for (let i = 0; i < this.lines.length; i++) {
         if (lineCircleCollision(this.lines[i], collider.pos, collider.radius))
@@ -31,20 +42,20 @@ class Player extends MovingObject {
     return false;
   }
 
-  chargeLaser(percent) {
+  chargeLaser(percent: number): void {
     if (percent > 1) percent = 1;
     this.charge = percent;
   }
 
-  charged() {
+  charged(): boolean {
     return this.charge === 1;
   }
 
-  discharge() {
+  discharge(): void {
     this.charge = 0;
   }
 
-  calculateLines() {
+  calculateLines(): void {
     const x = this.pos.x;
     const y = this.pos.y;
     const points = this.points.map((point) => {
@@ -67,7 +78,7 @@ class Player extends MovingObject {
     ];
   }
 
-  draw(ctx) {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.save();
     ctx.fillStyle = "White";
     ctx.beginPath();

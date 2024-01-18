@@ -18,7 +18,7 @@ class Enemy extends MovingObject {
     setInterval(() => (this.vel += 0.5), 5000);
   }
 
-  is_collided(collider: Line): boolean {
+  isCollided(collider: Line): boolean {
     if (lineCircleCollision(collider, this.pos, this.radius)) return true;
     return false;
   }
