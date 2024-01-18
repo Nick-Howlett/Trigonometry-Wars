@@ -28,10 +28,10 @@ class Laser {
     this.duration--;
   }
 
-  reflect(laserLine: Line, reflectLine: Line): void {
+  reflect(laserLine: Line, reflectLine: Line): boolean {
     if (this.reflections === 0) {
       this.duration = Math.min(this.duration, 12);
-      return; //stop if we are out of reflections
+      return false;
     }
     const laserVec = laserLine.vectorize();
     const norm = reflectLine.normalVec().normalize();
@@ -44,6 +44,8 @@ class Laser {
     newLine.p.y += offset.y;
     this.vecs.push(newLine);
     this.reflections--;
+
+    return true;
   }
 
   isCollidable(): boolean {

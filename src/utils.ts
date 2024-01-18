@@ -1,4 +1,6 @@
+import Enemy from "./enemy";
 import Line from "./line";
+import Player from "./player";
 import Point from "./point";
 import Vector from "./vector";
 
@@ -52,6 +54,10 @@ export const aggregateEdges = <T>(...edgeCollections: LinedEntity<T>[]) => {
   let ret: Line[] = [];
   edgeCollections.forEach((collection) => (ret = ret.concat(collection.lines)));
   return ret;
+};
+
+export const entityIsEnemy = (entity: Player | Enemy): entity is Enemy => {
+  return !!(entity as Enemy).reroute;
 };
 
 export const randInt = (max: number): number => {

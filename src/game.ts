@@ -1,5 +1,10 @@
 import Player from "./player";
-import { calculateTheta, aggregateEdges, calculateVector } from "./utils";
+import {
+  calculateTheta,
+  aggregateEdges,
+  calculateVector,
+  entityIsEnemy,
+} from "./utils";
 import { lineCircleCollision, bestLaserCollision } from "./collisions";
 import Line from "./line";
 import Cursor from "./cursor";
@@ -8,16 +13,45 @@ import runGameIntervals from "./intervals";
 import startInputListeners from "./inputs";
 import Obstacle from "./obstacle";
 import { explode } from "./particles/explosions";
+import Enemy from "./enemy";
+import Spark from "./particles/spark";
 
 class Game {
-  constructor(canvas, ctx, finishOverlay, scoreOverlay, sounds, muted) {
+  canvas: HTMLCanvasElement;
+  finishOverlay: HTMLElement;
+  scoreOverlay: HTMLElement;
+  ctx: CanvasRenderingContext2D;
+  sounds: { fire: HTMLAudioElement; charge: HTMLAudioElement };
+  isMuted: boolean;
+  dims: { width: number; height: number };
+  edges: Line[];
+  player: Player;
+  cursor: Cursor;
+  score: number;
+  displayScore: number;
+  laser: Laser | null;
+  entities: Array<Player | Enemy>;
+  obstacles: Obstacle[];
+  particles: Spark[];
+  keys: { [key: string]: boolean };
+  intervals: NodeJS.Timeout[];
+  chargeInterval: NodeJS.Timeout | null;
+
+  constructor(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    finishOverlay: HTMLElement,
+    scoreOverlay: HTMLElement,
+    sounds: { fire: HTMLAudioElement; charge: HTMLAudioElement },
+    muted: boolean,
+  ) {
     this.finishOverlay = finishOverlay;
     this.scoreOverlay = scoreOverlay;
     this.canvas = canvas;
     this.ctx = ctx;
     this.sounds = sounds;
-    this.is_muted = muted;
-    this.dims = [canvas.width, canvas.height];
+    this.isMuted = muted;
+    this.dims = { width: canvas.width, height: canvas.height };
     this.edges = [
       new Line({ x: 0, y: 0 }, { x: canvas.width, y: 0 }),
       new Line({ x: 0, y: 0 }, { x: 0, y: canvas.width }),
@@ -56,20 +90,32 @@ class Game {
       }),
     ];
     this.particles = [];
+    this.intervals = [];
+    this.chargeInterval = null;
     this.keys = {};
   }
 
-  start() {
-    this.intervals = runGameIntervals.bind(this)();
-    startInputListeners.bind(this)();
+  start(): void {
+    this.intervals = runGameIntervals({
+      tick: this.tick,
+      dims: this.dims,
+      entities: this.entities,
+      player: this.player,
+      updateScore: () => (this.displayScore = this.score),
+    });
+    startInputListeners({
+      canvas: this.canvas,
+      cursor: this.cursor,
+      keys: this.keys,
+    });
   }
 
-  mute() {
-    this.is_muted = true;
+  mute(): void {
+    this.isMuted = true;
   }
 
-  unmute() {
-    this.is_muted = false;
+  unmute(): void {
+    this.isMuted = false;
   }
 
   gameOver() {
@@ -77,19 +123,30 @@ class Game {
     this.canvas.className = "inactive";
     this.finishOverlay.className = "overlay game-over";
     const scoreSpan = document.getElementById("score");
+
+    if (!scoreSpan) {
+      return;
+    }
+
     scoreSpan.innerHTML = "";
     const score = document.createTextNode(`Your Score was: ${this.score}`);
     scoreSpan.appendChild(score);
   }
 
   check_collisions() {
-    const edges = aggregateEdges(this.player, ...this.obstacles);
-    let t, edge;
+    const edges = aggregateEdges<Player | Obstacle>(
+      this.player,
+      ...this.obstacles,
+    );
+    let t: number = 0;
+    let edge: Line | null = null;
+
     if (this.laser && this.laser.isCollidable()) {
       let laser = this.laser.vecs[this.laser.vecs.length - 1];
       [t, edge] = bestLaserCollision(laser, ...this.edges, ...edges);
     }
-    if (edge) {
+
+    if (edge && this.laser) {
       const laser = this.laser.grow(t);
       if (this.laser.reflect(laser, edge))
         this.particles = this.particles.concat(
@@ -98,14 +155,13 @@ class Game {
     }
     this.entities.slice(1).forEach((enemy) => {
       if (this.laser) {
-        let pos = this.laser.pos;
+        const pos = this.laser.pos;
         this.laser.vecs.forEach((vector, i) => {
           if (lineCircleCollision(vector, enemy.pos, enemy.radius)) {
             this.particles = this.particles.concat(explode(enemy.pos));
             delete this.entities[this.entities.indexOf(enemy)];
             this.score += 100 + 100 * i * 2;
           }
-          pos = vector;
         });
       }
       if (this.player.isCollided(enemy)) this.gameOver();
@@ -114,7 +170,7 @@ class Game {
 
   render() {
     this.scoreOverlay.innerHTML = `${this.displayScore}`;
-    this.ctx.clearRect(0, 0, this.dims[0], this.dims[1]);
+    this.ctx.clearRect(0, 0, this.dims.width, this.dims.height);
     if (this.laser) this.laser.draw(this.ctx);
     this.cursor.draw(this.ctx);
     this.entities.forEach((entity) => entity.draw(this.ctx));
@@ -140,7 +196,7 @@ class Game {
             },
             theta,
           );
-          if (!this.is_muted) {
+          if (!this.isMuted) {
             this.sounds.fire.load();
             this.sounds.fire.play();
           }
@@ -150,7 +206,7 @@ class Game {
     } else if (this.keys.Space || this.keys.Mouse) {
       const chargeTime = 1000;
       let i = 0;
-      if (!this.is_muted) {
+      if (!this.isMuted) {
         this.sounds.charge.load();
         this.sounds.charge.play();
       }
@@ -174,8 +230,8 @@ class Game {
       else entity.rotate(calculateTheta(this.player.pos, entity.pos));
       const edges = aggregateEdges(...this.obstacles);
       const collidedEdges = entity.move(edges);
-      if (collidedEdges.length > 0 && entity !== this.player) {
-        entity.reroute(collidedEdges, this.player.pos, this.ctx);
+      if (collidedEdges.length > 0 && entityIsEnemy(entity)) {
+        entity.reroute(collidedEdges, this.player.pos);
       }
     });
     this.particles.forEach((particle) => {
