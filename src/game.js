@@ -39,7 +39,6 @@ class Game {
     this.score = 0;
     this.displayScore = 0;
     this.laser = null;
-    this.enemySpeed = 1;
     this.entities = [this.player];
     this.obstacles = [
       new Obstacle({ x: this.canvas.width / 4, y: this.canvas.height / 4 }),

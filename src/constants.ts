@@ -1,0 +1,3 @@
+const STARTING_ENEMY_SPEED = 1;
+
+export { STARTING_ENEMY_SPEED };
