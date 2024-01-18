@@ -1,6 +1,12 @@
+import Laser from "./laser";
+import Line from "./line";
+import Point from "./point";
 import Vector from "./vector";
 
-export const bestLaserCollision = (laser, ...lines) => {
+export const bestLaserCollision = (
+  laser: Line,
+  ...lines: Line[]
+): [number, Line | null] => {
   let min = 10;
   let min_edge = null;
   for (let i = 0; i < lines.length; i++) {
@@ -14,12 +20,16 @@ export const bestLaserCollision = (laser, ...lines) => {
   return [min, min_edge];
 };
 
-export const samePoint = (p1, p2) => {
+export const samePoint = (p1: Point, p2: Point): boolean => {
   return p1.x === p2.x && p1.y === p2.y;
 };
 
 //https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
-export const lineCircleCollision = (line, center, radius) => {
+export const lineCircleCollision = (
+  line: Line,
+  center: Point,
+  radius: number,
+): boolean => {
   const lineVec = line.vectorize();
   const startToCenter = new Vector(center, line.p);
   const a = lineVec.dot(lineVec);
@@ -42,7 +52,7 @@ export const lineCircleCollision = (line, center, radius) => {
 };
 
 //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-export const lineLineCollision = (line1, line2) => {
+export const lineLineCollision = (line1: Line, line2: Line): boolean => {
   const r = new Vector(line1.q, line1.p);
   const s = new Vector(line2.q, line2.p);
   const startVec = new Vector(line2.p, line1.p);
@@ -56,7 +66,7 @@ export const lineLineCollision = (line1, line2) => {
       samePoint(line1.q, line2.q)
     ) {
       //lines literally start or end at same point
-      return 0.1;
+      return true;
     } else {
       if (
         (line1.p.x - line2.p.x < 0 &&
@@ -69,7 +79,7 @@ export const lineLineCollision = (line1, line2) => {
           line1.q.y - line2.q.y < 0)
       ) {
         //Do lines overlap?
-        return 0.1;
+        return true;
       }
     }
   } else if (denom === 0) {
@@ -79,9 +89,11 @@ export const lineLineCollision = (line1, line2) => {
     const u = num / denom;
     const t = startVec.cross(s) / denom;
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-      return t;
+      return true;
     } else {
       return false;
     }
   }
+
+  return false;
 };
