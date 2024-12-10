@@ -1,4 +1,3 @@
-import Laser from "./laser";
 import Line from "./line";
 import Point from "./point";
 import Vector from "./vector";
@@ -52,7 +51,10 @@ export const lineCircleCollision = (
 };
 
 //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-export const lineLineCollision = (line1: Line, line2: Line): boolean => {
+export const lineLineCollision = (
+  line1: Line,
+  line2: Line,
+): number | boolean => {
   const r = new Vector(line1.q, line1.p);
   const s = new Vector(line2.q, line2.p);
   const startVec = new Vector(line2.p, line1.p);
@@ -66,7 +68,7 @@ export const lineLineCollision = (line1: Line, line2: Line): boolean => {
       samePoint(line1.q, line2.q)
     ) {
       //lines literally start or end at same point
-      return true;
+      return 0.1;
     } else {
       if (
         (line1.p.x - line2.p.x < 0 &&
@@ -79,7 +81,7 @@ export const lineLineCollision = (line1: Line, line2: Line): boolean => {
           line1.q.y - line2.q.y < 0)
       ) {
         //Do lines overlap?
-        return true;
+        return 0.1;
       }
     }
   } else if (denom === 0) {
@@ -89,7 +91,7 @@ export const lineLineCollision = (line1: Line, line2: Line): boolean => {
     const u = num / denom;
     const t = startVec.cross(s) / denom;
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-      return true;
+      return t;
     } else {
       return false;
     }

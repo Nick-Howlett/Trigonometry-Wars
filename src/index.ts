@@ -67,9 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "Form submit",
   );
   const play = Array.from(document.getElementsByClassName("play-button"));
-  const soundButton = assertElement(
+  console.log(document.querySelector(".top-left"));
+  const soundButton = assertNonNull(
     document.querySelector(".top-left"),
-    elementIsInput,
     "Mute button",
   );
   let scoreSubmitted = false;

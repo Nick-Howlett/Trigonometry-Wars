@@ -93,7 +93,7 @@ class Game {
 
   start(): void {
     this.intervals = runGameIntervals({
-      tick: this.tick,
+      tick: this.tick.bind(this),
       dims: this.dims,
       entities: this.entities,
       player: this.player,
