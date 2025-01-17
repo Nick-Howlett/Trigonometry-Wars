@@ -9,15 +9,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const PORT = process.env.PORT || 8000; // process.env accesses heroku's environment variables
 
-const whitelist = [`https://nick-howlett.github.io`];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "https://nick-howlett.github.io",
 };
 
 app.use(cors(corsOptions));
