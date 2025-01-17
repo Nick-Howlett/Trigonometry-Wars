@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Build
         run: |
-           npm build
+           npm install
            npm start
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
