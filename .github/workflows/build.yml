@@ -63,8 +63,7 @@ jobs:
           static_site_generator: next
       - name: Build
         run: |
-          echo "npm start" >> $GITHUB_OUTPUT
-          exit 0
+           npm start
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
