@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack -w",
-    "build": "webpack"
+    "build": "webpack; cp ./dist/main.js ./main.js" 
   },
   "repository": {
     "type": "git",
