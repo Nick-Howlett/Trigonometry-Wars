@@ -10,7 +10,7 @@ const cors = require("cors");
 const PORT = process.env.PORT || 8000; // process.env accesses heroku's environment variables
 
 const corsOptions = {
-  origin: "https://nick-howlett.github.io",
+  origin: ["https://nick-howlett.github.io"],
 };
 
 app.use(cors(corsOptions));
@@ -21,6 +21,6 @@ app.use("/api/scores", scores);
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(db)
   .then(() => console.log("Connected to MongoDB successfully"))
   .catch((err) => console.log(err));
