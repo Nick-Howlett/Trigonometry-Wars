@@ -26,8 +26,10 @@ export const assertElement = <T extends HTMLElement>(
 };
 
 export const updateClass = (element: HTMLElement, classNames: string[]) => {
-  element.classList.forEach((token: string) => element.classList.remove(token));
+  element.className = "";
   classNames.forEach((className) => {
-    element.classList.add(className);
+    if (className) {
+      element.classList.add(className);
+    }
   });
 };
