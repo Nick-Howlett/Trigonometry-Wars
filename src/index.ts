@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let mute = true;
   let game: Game;
   axios
-    .get("https://trigonometry-scores.herokuapp.com/api/scores")
+    .get("https://trigonometry-scores-4f59d8894157.herokuapp.com/api/scores")
     .then((scores: { data: Score[] }) =>
       updateScores(scores, highScores, game, scoreSubmitted),
     );
@@ -132,15 +132,20 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     if (form.reportValidity()) {
       axios
-        .post("https://trigonometry-scores.herokuapp.com/api/scores", {
-          name: playerName.value,
-          score: game.score,
-        })
+        .post(
+          "https://trigonometry-scores-4f59d8894157.herokuapp.com/api/scores",
+          {
+            name: playerName.value,
+            score: game.score,
+          },
+        )
         .then(() => {
           formSubmit.value = "Score Submitted";
           scoreSubmitted = true;
           axios
-            .get("https://trigonometry-scores.herokuapp.com/api/scores")
+            .get(
+              "https://trigonometry-scores-4f59d8894157.herokuapp.com/api/scores",
+            )
             .then((scores: { data: Score[] }) =>
               updateScores(scores, highScores, game, scoreSubmitted),
             );
