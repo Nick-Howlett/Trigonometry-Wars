@@ -116,16 +116,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   scoreButton.forEach((button) => {
     button.addEventListener("click", () => {
-      updateClass(scoreBoard, "overlay");
-      updateClass(gameOver, "overlay hidden");
-      updateClass(scoreForm, "overlay hidden");
+      updateClass(scoreBoard, ["overlay"]);
+      updateClass(gameOver, ["overlay", "hidden"]);
+      updateClass(scoreForm, ["overlay", "hidden"]);
     });
   });
   scoreFormButton.forEach((button) => {
     button.addEventListener("click", () => {
-      updateClass(scoreForm, "overlay");
-      updateClass(gameOver, "overlay hidden");
-      updateClass(scoreBoard, "overlay hidden");
+      updateClass(scoreForm, ["overlay"]);
+      updateClass(gameOver, ["overlay", "hidden"]);
+      updateClass(scoreBoard, ["overlay", "hidden"]);
     });
   });
   formSubmit.addEventListener("click", (e) => {
@@ -169,13 +169,13 @@ document.addEventListener("DOMContentLoaded", () => {
   soundButton.addEventListener("click", (e) => toggleMute());
   const toggleMute = () => {
     if (mute) {
-      updateClass(soundIcon, "");
-      updateClass(muteIcon, "hidden");
+      updateClass(soundIcon, [""]);
+      updateClass(muteIcon, ["hidden"]);
       mute = false;
       if (game) game.unmute();
     } else {
-      updateClass(soundIcon, "hidden");
-      updateClass(muteIcon, "");
+      updateClass(soundIcon, ["hidden"]);
+      updateClass(muteIcon, [""]);
       mute = true;
       if (game) game.mute();
     }
